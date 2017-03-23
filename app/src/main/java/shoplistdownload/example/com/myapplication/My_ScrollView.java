@@ -37,7 +37,7 @@ public class My_ScrollView extends HorizontalScrollView {
     }
 
     public static abstract interface ScrollViewListener {
-        public abstract void onScrollChanged(My_ScrollView paramMy_ScrollView2, int paramInt1, int paramInt2, int paramInt3, int paramInt4);
+         abstract void onScrollChanged(My_ScrollView paramMy_ScrollView2, int paramInt1, int paramInt2, int paramInt3, int paramInt4);
     }
 
 

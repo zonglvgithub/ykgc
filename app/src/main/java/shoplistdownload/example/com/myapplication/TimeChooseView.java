@@ -98,6 +98,9 @@ public class TimeChooseView extends View {
 
     private long screenHeigth;
 
+    private boolean showCheckedRect;// false:不显示已选中区域框 true 显示已选中区域
+    private int checkPositon;//已选中position
+
 
     public TimeChooseView(Context context) {
         super(context);
@@ -206,11 +209,16 @@ public class TimeChooseView extends View {
 
         if (isPosition) {
             isPosition = false;
-            rectangular_y = (minimum_y + (position * spacing));
-            rectangular_to_y = (minimum_y + (position * spacing)) + spacing;
+
             notChoose_y = minimum_y;
-            notChoose_to_y = rectangular_y;
+            notChoose_to_y = (minimum_y + (position * spacing)) + spacing;
         }
+
+        if( showCheckedRect ){
+            rectangular_y = (minimum_y + (checkPositon * spacing));
+            rectangular_to_y = (minimum_y + (checkPositon * spacing)) + spacing;
+        }
+
 
         if (isPositionList) {
             isPositionList = false;
@@ -260,12 +268,15 @@ public class TimeChooseView extends View {
             }
         }
 
-        canvas.drawRect(rectangular_y, 0, rectangular_to_y, screenHeigth - line_x - statusBarHeight, paint);//画矩形选择框
+        if( showCheckedRect ){//显示举行已选框
 
-        //获取按钮初始位置
-        butBottomCircle_y = rectangular_to_y - bitmap_radius;
+            canvas.drawRect(rectangular_y, 0, rectangular_to_y, screenHeigth - line_x - statusBarHeight, paint);//画矩形选择框
+            //获取按钮初始位置
+            butBottomCircle_y = rectangular_to_y - bitmap_radius;
+            canvas.drawBitmap(bitmap, butBottomCircle_y, 60, paint);//按钮2
+        }
 
-        canvas.drawBitmap(bitmap, butBottomCircle_y, 60, paint);//按钮2
+
 
     }
 
@@ -351,10 +362,8 @@ public class TimeChooseView extends View {
 
                 if( Math.abs(currentRawX -downRawX)<2 && Math.abs(currentRawY -downRawY)<2){
 
-                    int clickPosition = click2Position(currentRawX, currentRawY);
-
-                    position = clickPosition;
-                    isPosition = true;
+                    checkPositon = click2Position(currentRawX, currentRawY);
+                    showCheckedRect = true;
 
                 }
 
