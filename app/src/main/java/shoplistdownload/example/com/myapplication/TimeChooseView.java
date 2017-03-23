@@ -58,8 +58,6 @@ public class TimeChooseView extends View {
     private float bitmap_radius;//按钮半径
 
 
-
-
     private float recordCenterY1;//记录按钮1圆心y轴
     private float recordCenterY2;//记录按钮2圆心y轴
 
@@ -214,10 +212,7 @@ public class TimeChooseView extends View {
             notChoose_to_y = (minimum_y + (position * spacing)) + spacing;
         }
 
-        if( showCheckedRect ){
-            rectangular_y = (minimum_y + (checkPositon * spacing));
-            rectangular_to_y = (minimum_y + (checkPositon * spacing)) + spacing;
-        }
+//      ddddddddddddddd
 
 
         if (isPositionList) {
@@ -268,14 +263,13 @@ public class TimeChooseView extends View {
             }
         }
 
-        if( showCheckedRect ){//显示举行已选框
+        if (showCheckedRect) {//显示举行已选框
 
             canvas.drawRect(rectangular_y, 0, rectangular_to_y, screenHeigth - line_x - statusBarHeight, paint);//画矩形选择框
             //获取按钮初始位置
             butBottomCircle_y = rectangular_to_y - bitmap_radius;
             canvas.drawBitmap(bitmap, butBottomCircle_y, 60, paint);//按钮2
         }
-
 
 
     }
@@ -293,7 +287,7 @@ public class TimeChooseView extends View {
             case MotionEvent.ACTION_DOWN:
 
 
-                Log.d( TAG, "DOWN");
+                Log.d(TAG, "DOWN");
 
                 lastY = (int) event.getRawX();
                 lastX = (int) (event.getRawY() - statusBarHeight);
@@ -301,7 +295,7 @@ public class TimeChooseView extends View {
                 downRawX = event.getX();
                 downRawY = event.getY();
 
-                Log.e( TAG, "点击的坐标 x：" + lastY + " y：：" + lastX);
+                Log.e(TAG, "点击的坐标 x：" + lastY + " y：：" + lastX);
 
                 //圆心坐标
                 recordCenterY2 = (butBottomCircle_y + bitmap_radius - paramInt1);
@@ -313,7 +307,7 @@ public class TimeChooseView extends View {
                 isMoveButton2 = false;
                 isMoveRectangular = false;
 
-                    if (lastY>recordCenterY2-ScreenUtil.dip2px(context, 15) && lastY<recordCenterY2+ScreenUtil.dip2px(context, 15)) {//是否按钮2移动
+                if (lastY > recordCenterY2 - ScreenUtil.dip2px(context, 15) && lastY < recordCenterY2 + ScreenUtil.dip2px(context, 15)) {//是否按钮2移动
                     isMoveButton2 = true;
                     getParent().requestDisallowInterceptTouchEvent(true);
                 } else if (lastX < (screenHeigth * 5 - statusBarHeight - line_x) && lastX < ScreenUtil.getScreenHeight(context)
@@ -326,12 +320,12 @@ public class TimeChooseView extends View {
 
             case MotionEvent.ACTION_MOVE:
 
-                Log.d( TAG, "MOVE");
+                Log.d(TAG, "MOVE");
 
                 moveY = event.getRawX() - statusBarHeight + paramInt1;
                 float mobile = (moveY - bitmap_radius);
 
-                    if (isMoveButton2) {//按钮2移动
+                if (isMoveButton2) {//按钮2移动
 
                     if (mobile < maximum_y) {
                         if (spacing < (int) (moveY - rectangular_y)) {
@@ -354,16 +348,21 @@ public class TimeChooseView extends View {
 
             case MotionEvent.ACTION_UP:
 
-                Log.d( TAG, "UP");
+                Log.d(TAG, "UP");
 
 
                 float currentRawX = event.getX();
                 float currentRawY = event.getY();
 
-                if( Math.abs(currentRawX -downRawX)<2 && Math.abs(currentRawY -downRawY)<2){
+                if (Math.abs(currentRawX - downRawX) < 2 && Math.abs(currentRawY - downRawY) < 2) {
 
                     checkPositon = click2Position(currentRawX, currentRawY);
                     showCheckedRect = true;
+
+                    if (showCheckedRect) {
+                        rectangular_y = (minimum_y + (checkPositon * spacing));
+                        rectangular_to_y = (minimum_y + (checkPositon * spacing)) + spacing;
+                    }
 
                 }
 
@@ -406,7 +405,7 @@ public class TimeChooseView extends View {
                         rectangular_to_y = maximum_y;
                     }
                 }
-                if (isMoveRectangular ) {//矩形选择框移动
+                if (isMoveRectangular) {//矩形选择框移动
                     float rectangularMobile = Math.round((rectangular_y - minimum_y) / spacing);
                     int rectangularNumber = Math.abs((int) rectangularMobile);
                     float mobileY1 = rectangularNumber * spacing + minimum_y;
@@ -449,20 +448,20 @@ public class TimeChooseView extends View {
     /**
      * 根据当前坐标获取当前的position
      */
-    public int click2Position( float rawx, float y){
+    public int click2Position(float rawx, float y) {
 
         long textSpacingPx = ScreenUtil.dip2px(context, textSpacing);
 
-        Log.d( TAG, "执行点击 textSpacing："+textSpacingPx);
+        Log.d(TAG, "执行点击 textSpacing：" + textSpacingPx);
 
         int clickPosition = 0;
-        clickPosition = (int)((rawx-line_x)/textSpacingPx);
-        float surplusPx = rawx%textSpacingPx;
-        if( surplusPx>0){
+        clickPosition = (int) ((rawx - line_x) / textSpacingPx);
+        float surplusPx = rawx % textSpacingPx;
+        if (surplusPx > 0) {
             clickPosition++;
         }
         clickPosition--;//小标初始值0；
-        Log.d( TAG, "执行点击 计算后position："+clickPosition);
+        Log.d(TAG, "执行点击 计算后position：" + clickPosition);
 
         return clickPosition;
 
