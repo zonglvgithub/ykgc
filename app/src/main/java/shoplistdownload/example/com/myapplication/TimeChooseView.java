@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -58,11 +59,9 @@ public class TimeChooseView extends View {
     private float bitmap_radius;//按钮半径
 
 
-    private float recordCenterY1;//记录按钮1圆心y轴
     private float recordCenterY2;//记录按钮2圆心y轴
 
 
-    private float butBottomCircle_x;//按钮2起始x轴
     private float butBottomCircle_y;//按钮2起始y轴
 
 
@@ -80,8 +79,8 @@ public class TimeChooseView extends View {
     private float rectangular_y;//矩形起始y轴
     private float rectangular_to_y;//矩形起结束y轴
     private float rectangular_spacing;//矩形高度
-    private float rectangular_y1;//记录矩形点击时的起始y轴
-    private float rectangular_to_y2;//记录矩形点击时的结束y轴
+    private float rectangular_x_begin;//记录矩形点击时的起始y轴
+    private float rectangular_x_end;//记录矩形点击时的结束y轴
 
     //不可选择区域
     private float notChoose_y;
@@ -98,7 +97,7 @@ public class TimeChooseView extends View {
 
     private boolean showCheckedRect;// false:不显示已选中区域框 true 显示已选中区域
     private int checkPositon;//已选中position
-
+    private moveSelectedCountdownTimer moveCountTimer;
 
     public TimeChooseView(Context context) {
         super(context);
@@ -114,7 +113,7 @@ public class TimeChooseView extends View {
     }
 
     private void init() {
-        butBottomCircle_x = ScreenUtil.getScreenHeight(context) - line_x - statusBarHeight;
+        rectangular_x_begin = ScreenUtil.getScreenHeight(context) - line_x - statusBarHeight;
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.time_select_view_button);
         bitmap_width = bitmap.getWidth();
 
@@ -300,8 +299,8 @@ public class TimeChooseView extends View {
                 //圆心坐标
                 recordCenterY2 = (butBottomCircle_y + bitmap_radius - paramInt1);
 
-                rectangular_y1 = (rectangular_y - paramInt1);
-                rectangular_to_y2 = (rectangular_to_y - paramInt1);
+                rectangular_x_begin = (rectangular_y - paramInt1);
+                rectangular_x_end = (rectangular_to_y - paramInt1);
                 onTouchListener(event, false);
                 getParent().requestDisallowInterceptTouchEvent(false);
                 isMoveButton2 = false;
@@ -311,7 +310,7 @@ public class TimeChooseView extends View {
                     isMoveButton2 = true;
                     getParent().requestDisallowInterceptTouchEvent(true);
                 } else if (lastX < (screenHeigth * 5 - statusBarHeight - line_x) && lastX < ScreenUtil.getScreenHeight(context)
-                        && lastY > rectangular_y1 && lastY < rectangular_to_y2) {//是否矩形框移动
+                        && lastY > rectangular_x_begin && lastY < rectangular_x_end) {//是否矩形框移动
                     isMoveRectangular = true;
                     rectangular_spacing = Math.abs(rectangular_to_y - rectangular_y);
                     getParent().requestDisallowInterceptTouchEvent(true);
@@ -335,8 +334,8 @@ public class TimeChooseView extends View {
                     }
                 } else if (isMoveRectangular) {//矩形选择框移动
 
-                    float rectangular_mobile = rectangular_y1 + (moveY - lastY);
-                    float rectangular_to_mobile = rectangular_to_y2 + (moveY - lastY);
+                    float rectangular_mobile = rectangular_x_begin + (moveY - lastY);
+                    float rectangular_to_mobile = rectangular_x_end + (moveY - lastY);
 
                     if (rectangular_mobile > minimum_y && rectangular_to_mobile < maximum_y) {
                         rectangular_to_y = rectangular_to_mobile;
@@ -351,18 +350,30 @@ public class TimeChooseView extends View {
                 Log.d(TAG, "UP");
 
 
-                float currentRawX = event.getX();
-                float currentRawY = event.getY();
+                float currentX = event.getX();
+                float currentY = event.getY();
 
-                if (Math.abs(currentRawX - downRawX) < 2 && Math.abs(currentRawY - downRawY) < 2) {
+                if (Math.abs(currentX - downRawX) < 2 && Math.abs(currentY - downRawY) < 2) {
 
-                    checkPositon = click2Position(currentRawX, currentRawY);
-                    showCheckedRect = true;
+                    boolean clickPositionSlected = clickPositionSelected((int) event.getRawX(), event.getRawY());
+                    if (showCheckedRect) {//已选中进行移动
+//                        click2PositionCoordinate(currentX);
+                        checkPositon = click2Position(currentX, currentY);
 
-                    if (showCheckedRect) {
                         rectangular_y = (minimum_y + (checkPositon * spacing));
-                        rectangular_to_y = (minimum_y + (checkPositon * spacing)) + spacing;
+                        rectangular_to_y = (minimum_y + (checkPositon * spacing)) + rectangular_x_end-rectangular_x_begin;
+
+
+                    } else {//未选中，选中点击取
+                        showCheckedRect = true;
+                        checkPositon = click2Position(currentX, currentY);
+
+                        if (showCheckedRect) {
+                            rectangular_y = (minimum_y + (checkPositon * spacing));
+                            rectangular_to_y = (minimum_y + (checkPositon * spacing)) + spacing;
+                        }
                     }
+
 
                 }
 
@@ -395,7 +406,7 @@ public class TimeChooseView extends View {
                         } else {
                             mobileY = (spacing1 + spacing + paramInt1);
                         }
-                        if ((int) spacing1 <= (int) recordCenterY1) {
+                        if ((int) spacing1 <= (int) rectangular_x_begin) {
                             mobileY = rectangular_y + spacing;
                         }
                     }
@@ -445,6 +456,16 @@ public class TimeChooseView extends View {
         return true;
     }
 
+    private float[] click2PositionCoordinate( float x){
+        long textSpacingPx = ScreenUtil.dip2px(context, textSpacing);
+        float[] coordinate = new float[2];
+        coordinate[0] = (x-line_x)/textSpacingPx*textSpacingPx;
+        coordinate[1] = coordinate[0]+(rectangular_x_end-rectangular_x_begin);
+
+        Log.d(TAG, "移动坐标 coordinate x：" + coordinate[0]+"  "+coordinate[1]);
+        return coordinate;
+    }
+
     /**
      * 根据当前坐标获取当前的position
      */
@@ -467,6 +488,22 @@ public class TimeChooseView extends View {
 
     }
 
+
+    /**
+     * 根据坐标返回点击位置是否已被选中
+     *
+     * @param rawX
+     * @param RawY
+     * @return
+     */
+    private boolean clickPositionSelected(int rawX, double RawY) {
+
+//        Log.d(TAG, "RAWX:" + rawX + " rectangular_x_begin:" + rectangular_x_begin + " rawX>=rectangular_x_begin:" + (rawX >= rectangular_x_begin));
+//        Log.d(TAG, "RAWX:" + rawX + " rectangular_x_end:" + rectangular_x_end + " rawX>=rectangular_x_begin:" + (rawX <= rectangular_x_end));
+//        Log.d(TAG, "rawX>=rectangular_x_begin && rawX<=rectangular_x_end" + (rawX >= rectangular_x_begin && rawX <= rectangular_x_end));
+        return rawX >= rectangular_x_begin && rawX <= rectangular_x_end;
+
+    }
 
     private void onTouchListener(MotionEvent event, boolean isChoose) {
         if (onTouchListener != null) {
@@ -502,6 +539,42 @@ public class TimeChooseView extends View {
         public float not_choosearea_y;
         public float not_choosearea_to_y;
 
+    }
+
+    /**
+     * 启动一定动画timer
+     */
+    private void startMoveTimer(){
+        moveCountTimer = new moveSelectedCountdownTimer(1000,20);
+        moveCountTimer.start();
+    }
+
+    /**
+     * 关闭移动动画
+     */
+    private void stopMoveTimer(){
+        if( moveCountTimer != null){
+            moveCountTimer.cancel();
+            moveCountTimer = null;
+        }
+    }
+
+    class moveSelectedCountdownTimer extends CountDownTimer{
+
+
+        public moveSelectedCountdownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long l) {
+
+        }
+
+        @Override
+        public void onFinish() {
+
+        }
     }
 
 

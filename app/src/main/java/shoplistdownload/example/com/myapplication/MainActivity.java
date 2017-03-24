@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
         timeChooseView.setSelectedTime(new TimeChooseView.SelectedTime() {
             @Override
             public void getSelectedTime(String startTimeStr, String endTimeStr) {
-                Log.e("==============      ", startTimeStr + "    ===   " + endTimeStr);
+                Log.e("TimeChooseView", startTimeStr + "    ===   " + endTimeStr);
             }
         });
 
