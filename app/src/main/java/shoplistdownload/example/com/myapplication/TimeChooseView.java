@@ -211,8 +211,6 @@ public class TimeChooseView extends View {
             notChoose_to_y = (minimum_y + (position * spacing)) + spacing;
         }
 
-//      ddddddddddddddd
-
 
         if (isPositionList) {
             isPositionList = false;
@@ -357,12 +355,12 @@ public class TimeChooseView extends View {
 
                     boolean clickPositionSlected = clickPositionSelected((int) event.getRawX(), event.getRawY());
                     if (showCheckedRect) {//已选中进行移动
-//                        click2PositionCoordinate(currentX);
+
                         checkPositon = click2Position(currentX, currentY);
 
-                        rectangular_y = (minimum_y + (checkPositon * spacing));
-                        rectangular_to_y = (minimum_y + (checkPositon * spacing)) + rectangular_x_end-rectangular_x_begin;
-
+//                        rectangular_y = (minimum_y + (checkPositon * spacing));
+//                        rectangular_to_y = (minimum_y + (checkPositon * spacing)) + rectangular_x_end-rectangular_x_begin;
+                        startMoveTimer(checkPositon, spacing);
 
                     } else {//未选中，选中点击取
                         showCheckedRect = true;
@@ -544,9 +542,22 @@ public class TimeChooseView extends View {
     /**
      * 启动一定动画timer
      */
-    private void startMoveTimer(){
-        moveCountTimer = new moveSelectedCountdownTimer(1000,20);
+    private void startMoveTimer( int clickPosition,float spacing){
+
+        stopMoveTimer();
+        int lastPosition = click2Position(rectangular_y, 0);
+
+        int millisInFuture = 200;
+        int countDownInterval = 10;
+        int  value = Math.abs(clickPosition-lastPosition);
+        if(value>0){
+            millisInFuture = value * 100;
+            countDownInterval = millisInFuture/(value * 10);
+        }
+
+        moveCountTimer = new moveSelectedCountdownTimer(millisInFuture, countDownInterval, clickPosition, spacing);
         moveCountTimer.start();
+
     }
 
     /**
@@ -561,18 +572,59 @@ public class TimeChooseView extends View {
 
     class moveSelectedCountdownTimer extends CountDownTimer{
 
+        private int clickPosition;
+        private float rectangular_x;
+        private float rectangular_to_x;
 
-        public moveSelectedCountdownTimer(long millisInFuture, long countDownInterval) {
+        private boolean move2Left;//false:向左移动 true:向右移动
+        private float moveDiatance;
+         int count;
+
+        public moveSelectedCountdownTimer(long millisInFuture, long countDownInterval, int clickPosition,float spacing) {
             super(millisInFuture, countDownInterval);
+
+            Log.d( TAG, "总时间："+millisInFuture+" 间隔时间："+countDownInterval);
+
+            this.clickPosition = clickPosition;
+            rectangular_x = (minimum_y + (clickPosition * spacing));
+            rectangular_to_x = (minimum_y + (clickPosition * spacing)) + rectangular_x_end-rectangular_x_begin;
+
+            if(rectangular_x<rectangular_y){
+                move2Left = true;
+            }else{
+                move2Left = false;
+            }
+
+            long countDownCount = millisInFuture/countDownInterval;
+            float distance = Math.abs(rectangular_y - rectangular_x);
+            Log.d( TAG, "需执行次数："+countDownCount);
+            moveDiatance = distance/(countDownCount);
+
+            moveDiatance = moveDiatance;
         }
 
         @Override
         public void onTick(long l) {
 
+            if( move2Left ){
+                rectangular_y-= moveDiatance;
+                rectangular_to_y -= moveDiatance;
+            }else{
+                rectangular_y+= moveDiatance;
+                rectangular_to_y += moveDiatance;
+            }
+            count++;
+
+            Log.d( TAG, "执行距离："+rectangular_y+ " 已经执行次数："+count +" 剩余时间："+l);
+            invalidate();
         }
 
         @Override
         public void onFinish() {
+            rectangular_y = rectangular_x;
+            rectangular_to_y = rectangular_to_x;
+            Log.d( TAG, "执行距离 finish ："+rectangular_y);
+            invalidate();
 
         }
     }
