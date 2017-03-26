@@ -93,6 +93,7 @@ public class TimeChooseView extends View {
     private int checkPositon;//已选中position
     private float  bottomH;//底线距离底部高度
     private float lineH ; //竖线高度
+    private int spacing;
 
     public TimeChooseView(Context context) {
         super(context);
@@ -121,6 +122,8 @@ public class TimeChooseView extends View {
         bottomH = ScreenUtil.dip2px(context,5);
         lineH = screenHeigth/5*3;
 
+         spacing = (int) Math.abs(ScreenUtil.dip2pxf(context, textSpacing));
+
     }
 
     public void setTime(List<TimeMode> timeList) {
@@ -129,6 +132,7 @@ public class TimeChooseView extends View {
 
     public void setTextSpacing(int textSpacing) {
         this.textSpacing = textSpacing;
+        spacing = (int) Math.abs(ScreenUtil.dip2pxf(context, textSpacing));
     }
 
     public void setOnTouchListener(OnTouchListener onTouchListener) {
@@ -280,7 +284,7 @@ public class TimeChooseView extends View {
 
         invalidate();
         Log.e("==================", "    =====       ");
-        int spacing = (int) Math.abs(ScreenUtil.dip2pxf(context, textSpacing));
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
@@ -546,6 +550,10 @@ public class TimeChooseView extends View {
             millisInFuture = positionDiatance * 100;
             if( millisInFuture >1000){
                 millisInFuture = 1000;
+            }else if( millisInFuture >800){
+                millisInFuture = 700;
+            }else{
+                millisInFuture = 300;
             }
         }
 
@@ -567,6 +575,33 @@ public class TimeChooseView extends View {
         anim.start();
     }
 
+    /**
+     * 去掉一个点位时间选择
+     * 最少选择一个，否则无效
+     */
+    public void removePick(){
+
+        if( (rectangular_x_end-rectangular_x_begin)/spacing>1){//当前状态可进行item递减
+
+        }
+
+    }
+
+    /**
+     * 添加一个选择
+     * 将选择时间右边所有时间选择
+     * 否则无效
+     */
+    public void addPick(){
+
+        int maxPosition = 1;//当前view最大item下标
+        int currentSellectMaxPosition = 2;
+
+        if(currentSellectMaxPosition<maxPosition){//当前状态可进行item的赠
+
+        }
+        
+    }
 
 
 }
