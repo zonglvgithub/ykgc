@@ -1,20 +1,15 @@
 package shoplistdownload.example.com.myapplication;
 
-import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.TranslateAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -259,8 +254,6 @@ public class TimeChooseView extends View {
         }
 
         if (showCheckedRect) {//显示举行已选框
-
-//            canvas.translate(100,0);
 
             canvas.drawRect(rectangular_y, 0, rectangular_to_y, screenHeigth - line_x - statusBarHeight, paint);//画矩形选择框
             //获取按钮初始位置
@@ -525,9 +518,6 @@ public class TimeChooseView extends View {
      */
     private boolean clickPositionSelected(int rawX, double RawY) {
 
-//        Log.d(TAG, "RAWX:" + rawX + " rectangular_x_begin:" + rectangular_x_begin + " rawX>=rectangular_x_begin:" + (rawX >= rectangular_x_begin));
-//        Log.d(TAG, "RAWX:" + rawX + " rectangular_x_end:" + rectangular_x_end + " rawX>=rectangular_x_begin:" + (rawX <= rectangular_x_end));
-//        Log.d(TAG, "rawX>=rectangular_x_begin && rawX<=rectangular_x_end" + (rawX >= rectangular_x_begin && rawX <= rectangular_x_end));
         return rawX >= rectangular_x_begin && rawX <= rectangular_x_end;
 
     }
