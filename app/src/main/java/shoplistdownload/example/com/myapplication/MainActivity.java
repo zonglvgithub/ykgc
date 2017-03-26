@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        timeChooseView.setWidthHeight(ScreenUtil.dip2px(this, timeList.size() * textSpacing + 20), ScreenUtil.dip2px(this,100));// 重新绘制宽高，不然自定义控件放在ScrollView里面没有高度不显示
+        timeChooseView.setWidthHeight(ScreenUtil.dip2px(this, timeList.size() * textSpacing + 20), ScreenUtil.dip2px(this,80));// 重新绘制宽高，不然自定义控件放在ScrollView里面没有高度不显示
 
     }
 }

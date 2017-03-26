@@ -43,9 +43,9 @@ public class TimeChooseView extends View {
     private float maximum_y = 0;//可移动最大y
     private boolean isMaximum_y = true;//获取最大值
 
-    private int textSize = 16;//时间字体大小
+    private int textSize = 12;//时间字体大小
     private int textX = 50;//时间字体距左边位置
-    private int textSpacing = 0;//时间字体间距
+    private int textSpacing = 60;//时间字体间距 默认60
 
 
     private Bitmap bitmap;//按钮图片
@@ -91,7 +91,8 @@ public class TimeChooseView extends View {
 
     private boolean showCheckedRect;// false:不显示已选中区域框 true 显示已选中区域
     private int checkPositon;//已选中position
-//    private moveSelectedCountdownTimer moveCountTimer;
+    private float  bottomH;//底线距离底部高度
+    private float lineH ; //竖线高度
 
     public TimeChooseView(Context context) {
         super(context);
@@ -116,7 +117,9 @@ public class TimeChooseView extends View {
         bitmap_radius = bitmap_width / 2;
         isPerform = true;
 
-        screenHeigth = ScreenUtil.getScreenHeight(context) / 5;
+        screenHeigth = ScreenUtil.dip2px(context, 80);
+        bottomH = ScreenUtil.dip2px(context,5);
+        lineH = screenHeigth/5*3;
 
     }
 
@@ -157,10 +160,10 @@ public class TimeChooseView extends View {
         super.onDraw(canvas);
 
 
-        int h = textSpacing;
+        int h = textSpacing/2;
         NotChoosearea notChoosearea = null;
         int spacing = (int) Math.abs(ScreenUtil.dip2pxf(context, textSpacing));
-        line_x = ScreenUtil.dip2pxf(context, textX);
+        line_x = ScreenUtil.dip2pxf(context, textX/2);
         Paint paint = new Paint();
         paint.setColor(context.getResources().getColor(R.color.transparencyg_reen_20));
 
@@ -175,12 +178,17 @@ public class TimeChooseView extends View {
         Paint paintText = new Paint();
         paintText.setColor(context.getResources().getColor(R.color.black));
         paintText.setTextSize(ScreenUtil.dip2pxf(context, textSize));
-        canvas.drawLine(0f, (float) (screenHeigth - line_x - statusBarHeight), BWScreenWidth, (float) (screenHeigth - line_x - statusBarHeight), paintLine);// 画竖线
+        canvas.drawLine(0f,  screenHeigth - bottomH, BWScreenWidth, screenHeigth - bottomH, paintLine);// 画底部横线
         minimum_y = ScreenUtil.dip2pxf(context, (h - (textSize / 2.5f)));
         float maximum_to_y = 0;
         for (int i = 0; i < timeList.size(); i++) {//画item线
             TimeMode time = timeList.get(i);
-            canvas.drawLine(ScreenUtil.dip2pxf(context, (h - (textSize / 2.5f))), 0, ScreenUtil.dip2pxf(context, (h - (textSize / 2.5f))), screenHeigth - line_x - statusBarHeight, paintLine);// 画水平线
+
+            if(i%2 ==1){
+                canvas.drawLine(ScreenUtil.dip2pxf(context, (h - (textSize / 2.5f))), screenHeigth - bottomH-lineH, ScreenUtil.dip2pxf(context, (h - (textSize / 2.5f))), screenHeigth - bottomH, paintLine);// 垂直item线
+            }else{
+                canvas.drawLine(ScreenUtil.dip2pxf(context, (h - (textSize / 2.5f))), screenHeigth - bottomH*5-lineH, ScreenUtil.dip2pxf(context, (h - (textSize / 2.5f))), screenHeigth - bottomH, paintLine);// 垂直item线
+            }
             maximum_to_y = ScreenUtil.dip2pxf(context, ((h - (textSize / 2.5f)) + textSpacing));
             //获取矩形初始位置
             if (isPerform) {
@@ -190,7 +198,7 @@ public class TimeChooseView extends View {
             }
 
             paintText.setTextAlign(Paint.Align.RIGHT);
-            canvas.drawText(time.time, ScreenUtil.dip2pxf(context, h), screenHeigth + statusBarHeight - ScreenUtil.dip2pxf(context, textX), paintText);// 画文本
+            canvas.drawText(time.time, ScreenUtil.dip2pxf(context, h+25), screenHeigth - bottomH*2 - lineH, paintText);// 画文本
             h += textSpacing;
         }
         if (isMaximum_y) {
@@ -224,10 +232,10 @@ public class TimeChooseView extends View {
                 t = position;
             }
         }
-        canvas.drawRect(notChoose_y, 0, notChoose_to_y, screenHeigth - statusBarHeight - line_x, notChoosePaint);//非选区域
+        canvas.drawRect(notChoose_y, screenHeigth - bottomH-lineH, notChoose_to_y, screenHeigth - bottomH, notChoosePaint);//非选区域
         for (int i = 0; i < notChooseareaList.size(); i++) {//遍历不可选择区域
             NotChoosearea nc = notChooseareaList.get(i);
-            canvas.drawRect(nc.not_choosearea_y, 0, nc.not_choosearea_to_y, screenHeigth - line_x - statusBarHeight, notChoosePaint);//非选区域
+            canvas.drawRect(nc.not_choosearea_y, screenHeigth - bottomH-lineH, nc.not_choosearea_to_y, screenHeigth - bottomH, notChoosePaint);//非选区域
         }
 
         if (rectangular_y < notChoose_to_y) {
@@ -255,10 +263,10 @@ public class TimeChooseView extends View {
 
         if (showCheckedRect) {//显示举行已选框
 
-            canvas.drawRect(rectangular_y, 0, rectangular_to_y, screenHeigth - line_x - statusBarHeight, paint);//画矩形选择框
+            canvas.drawRect(rectangular_y, screenHeigth - bottomH-lineH, rectangular_to_y, screenHeigth - bottomH, paint);//画矩形选择框
             //获取按钮初始位置
             butBottomCircle_y = rectangular_to_y - bitmap_radius;
-            canvas.drawBitmap(bitmap, butBottomCircle_y, 60, paint);//按钮2
+            canvas.drawBitmap(bitmap, butBottomCircle_y, screenHeigth - bottomH-lineH/3*2, paint);//按钮2
         }
 
 
@@ -350,38 +358,7 @@ public class TimeChooseView extends View {
                     if (showCheckedRect) {//已选中进行移动
 
                         checkPositon = click2Position(currentX, currentY);
-
-                        float rectangular_y1 = (minimum_y + (checkPositon * spacing));
-                        float rectangular_to_y1 = (minimum_y + (checkPositon * spacing)) + rectangular_x_end-rectangular_x_begin;
-
-                        int lastPosition = click2Position(rectangular_y, 0);
-
-                        int millisInFuture = 200;
-                        int  positionDiatance = Math.abs(checkPositon-lastPosition);
-                        if(positionDiatance>0){
-                            millisInFuture = positionDiatance * 100;
-                            if( millisInFuture >1000){
-                                millisInFuture = 1000;
-                            }
-                        }
-
-
-                        Log.d(TAG , "准备偏移  开始值"+rectangular_y+" 结束值："+rectangular_y1 +" 执行时间："+millisInFuture);
-                        ValueAnimator anim = ValueAnimator.ofFloat(rectangular_y, rectangular_y1);
-                        anim.setDuration(millisInFuture);
-                        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                float currentValue = (float) animation.getAnimatedValue();
-                                rectangular_y = currentValue;
-                                rectangular_to_y = currentValue+rectangular_x_end-rectangular_x_begin;
-
-                                invalidate();
-
-                                Log.d(TAG , "cuurent value is " + currentValue);
-                            }
-                        });
-                        anim.start();
+                        move2Click(spacing);
 
                     } else {//未选中，选中点击取
                         showCheckedRect = true;
@@ -442,7 +419,6 @@ public class TimeChooseView extends View {
                     rectangular_y = mobileY1;
                     rectangular_to_y = mobileY1 + rectangular_spacing;
                 }
-                ValueAnimator valueAnimator = ValueAnimator.ofFloat(1, 0);
 
                 List<String> startTime = new ArrayList<>();
                 int start = (int) ((rectangular_y - minimum_y) / spacing);
@@ -558,94 +534,38 @@ public class TimeChooseView extends View {
 
     }
 
-//    /**
-//     * 启动一定动画timer
-//     */
-//    private void startMoveTimer( int clickPosition,float spacing){
-//
-//        stopMoveTimer();
-//        int lastPosition = click2Position(rectangular_y, 0);
-//
-//        int millisInFuture = 200;
-//        int countDownInterval = 10;
-//        int  value = Math.abs(clickPosition-lastPosition);
-//        if(value>0){
-//            millisInFuture = value * 100;
-//            countDownInterval = millisInFuture/(value * 10);
-//        }
-//
-//        moveCountTimer = new moveSelectedCountdownTimer(millisInFuture, countDownInterval, clickPosition, spacing);
-//        moveCountTimer.start();
-//
-//    }
-//
-//    /**
-//     * 关闭移动动画
-//     */
-//    private void stopMoveTimer(){
-//        if( moveCountTimer != null){
-//            moveCountTimer.cancel();
-//            moveCountTimer = null;
-//        }
-//    }
-//
-//    class moveSelectedCountdownTimer extends CountDownTimer{
-//
-//        private int clickPosition;
-//        private float rectangular_x;
-//        private float rectangular_to_x;
-//
-//        private boolean move2Left;//false:向左移动 true:向右移动
-//        private float moveDiatance;
-//         int count;
-//
-//        public moveSelectedCountdownTimer(long millisInFuture, long countDownInterval, int clickPosition,float spacing) {
-//            super(millisInFuture, countDownInterval);
-//
-//            Log.d( TAG, "总时间："+millisInFuture+" 间隔时间："+countDownInterval);
-//
-//            this.clickPosition = clickPosition;
-//            rectangular_x = (minimum_y + (clickPosition * spacing));
-//            rectangular_to_x = (minimum_y + (clickPosition * spacing)) + rectangular_x_end-rectangular_x_begin;
-//
-//            if(rectangular_x<rectangular_y){
-//                move2Left = true;
-//            }else{
-//                move2Left = false;
-//            }
-//
-//            long countDownCount = millisInFuture/countDownInterval;
-//            float distance = Math.abs(rectangular_y - rectangular_x);
-//            Log.d( TAG, "需执行次数："+countDownCount);
-//            moveDiatance = distance/(countDownCount);
-//
-//        }
-//
-//        @Override
-//        public void onTick(long l) {
-//
-//            if( move2Left ){
-//                rectangular_y-= moveDiatance;
-//                rectangular_to_y -= moveDiatance;
-//            }else{
-//                rectangular_y+= moveDiatance;
-//                rectangular_to_y += moveDiatance;
-//            }
-//            count++;
-//
-//            Log.d( TAG, "执行距离："+rectangular_y+ " 已经执行次数："+count +" 剩余时间："+l);
-//            invalidate();
-//        }
-//
-//        @Override
-//        public void onFinish() {
-//            rectangular_y = rectangular_x;
-//            rectangular_to_y = rectangular_to_x;
-//            Log.d( TAG, "执行距离 finish ："+rectangular_y);
-//            invalidate();
-//
-//        }
-//    }
+    private void move2Click( float spacing){
+        float rectangular_y1 = (minimum_y + (checkPositon * spacing));
+        float rectangular_to_y1 = (minimum_y + (checkPositon * spacing)) + rectangular_x_end-rectangular_x_begin;
+
+        int lastPosition = click2Position(rectangular_y, 0);
+
+        int millisInFuture = 200;
+        int  positionDiatance = Math.abs(checkPositon-lastPosition);
+        if(positionDiatance>0){
+            millisInFuture = positionDiatance * 100;
+            if( millisInFuture >1000){
+                millisInFuture = 1000;
+            }
+        }
+
+        Log.d(TAG , "准备偏移  开始值"+rectangular_y+" 结束值："+rectangular_y1 +" 执行时间："+millisInFuture);
+        ValueAnimator anim = ValueAnimator.ofFloat(rectangular_y, rectangular_y1);
+        anim.setDuration(millisInFuture);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float currentValue = (float) animation.getAnimatedValue();
+                rectangular_y = currentValue;
+                rectangular_to_y = currentValue+rectangular_x_end-rectangular_x_begin;
+
+                invalidate();
+
+                Log.d(TAG , "cuurent value is " + currentValue);
+            }
+        });
+        anim.start();
+    }
 
 
 
