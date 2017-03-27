@@ -1,7 +1,9 @@
 package shoplistdownload.example.com.myapplication;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 
@@ -10,6 +12,8 @@ import android.widget.ScrollView;
  */
 
 public class My_ScrollView extends HorizontalScrollView {
+
+    public static final String TAG = "My_ScrollView";
 
     private ScrollViewListener scrollViewListener = null;
 
@@ -41,4 +45,42 @@ public class My_ScrollView extends HorizontalScrollView {
     }
 
 
+
+    private ValueAnimator anim;
+    //上次移动剩余距离
+    private float surplusDistance;
+    private float lastAnimatedVale= 0;//上一次动画产生的中间移动距离
+
+    public void scrollMoveTo(float begin ,final float end) {
+
+
+
+        if(anim != null && anim.isRunning()){
+            anim.cancel();
+        }
+        lastAnimatedVale = 0;
+
+        Log.d(TAG, "scrollView 起始值："+begin +" 终点值："+end);
+         anim = ValueAnimator.ofFloat(begin, end);
+        anim.setDuration(300);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float currentValue = (float) animation.getAnimatedValue();
+
+                surplusDistance = end-currentValue;
+
+                Log.d(TAG, "scrollView 中间值："+currentValue +" 移动值："+surplusDistance);
+
+                float moveDistance = currentValue-lastAnimatedVale;
+                if( currentValue >0 ) scrollBy((int)(moveDistance+1),0);
+                if( currentValue <0 ) scrollBy((int)(moveDistance-1),0);
+//                scrollBy((int)(currentValue-lastAnimatedVale),0);
+                lastAnimatedVale =currentValue;
+
+            }
+        });
+        anim.start();
+
+    }
 }

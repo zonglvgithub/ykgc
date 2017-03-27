@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener,TimeChooseView.TimeChooseMoveIntreface {
     TimeChooseView timeChooseView;
     My_ScrollView scrollView;
     List<TimeMode> timeList = new ArrayList<>();
@@ -48,6 +48,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             timeList.add(timeMode);
             timeList.add(timeMode1);
         }
+        timeChooseView.setTimeChooseMoveIntreface( this );
         timeChooseView.setTime(timeList);
         timeChooseView.setTextSpacing(textSpacing);
         timeChooseView.setPosition(3);
@@ -106,6 +107,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     toast.show();
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void timeChooseMove(boolean direction, float distance) {
+        if( direction ){
+            scrollView.scrollMoveTo(0 ,distance);
+//            scrollView.scrollBy((int)distance,,0);
+        }else{
+            scrollView.scrollMoveTo(0,-distance);
+//            scrollView.scrollBy((int)-distance,0);
         }
     }
 }

@@ -88,9 +88,10 @@ public class TimeChooseView extends View {
     private int checkPositon;//已选中position
     private float bottomH;//底线距离底部高度
     private float lineH; //竖线高度
-    private int itemSpacing;
+    private int itemSpacing;//每一个时间块宽度
 
     private ValueAnimator anim;//移动动画
+    private TimeChooseMoveIntreface timeChooseMoveIntreface;
 
     public TimeChooseView(Context context) {
         super(context);
@@ -125,6 +126,10 @@ public class TimeChooseView extends View {
 
     public void setTime(List<TimeMode> timeList) {
         this.timeList = timeList;
+    }
+
+    public void setTimeChooseMoveIntreface(TimeChooseMoveIntreface timeChooseMoveIntreface) {
+        this.timeChooseMoveIntreface = timeChooseMoveIntreface;
     }
 
     public void setTextSpacing(int textSpacing) {
@@ -589,8 +594,10 @@ public class TimeChooseView extends View {
         if( anim != null && anim.isRunning()) return false;
         boolean addSuccess;
 
+
+        scroll2LeftOnePosition();
         int itemCount = (int) (rectangular_to_y - rectangular_y) / itemSpacing;
-        Log.d(TAG, "当前item数量：" + itemCount);
+        Log.d(TAG, "当前item数量：" + itemCount +"开始值" + rectangular_to_y + " 结束值：" + (rectangular_y ));
         if (itemCount > 1) {//当前状态可进行item递减
             addSuccess = true;
 
@@ -627,6 +634,8 @@ public class TimeChooseView extends View {
     public boolean addPick() {
 
         if( anim != null && anim.isRunning()) return false;
+        scroll2RightOnePosition();
+
         showCheckedRect = true;
         int maxPosition = BWScreenWidth / itemSpacing;//当前view最大item下标
         int currentSellectMaxPosition = (int) rectangular_to_y / itemSpacing;
@@ -665,4 +674,51 @@ public class TimeChooseView extends View {
     }
 
 
+    /**
+     * 当前选择最大item存在屏幕左边进行背景像item递减反方向移动
+     */
+    private void scroll2LeftOnePosition(){
+
+        float screenLeft_x = paramInt1;
+        int screenLeftPosition = (int)screenLeft_x/itemSpacing;
+        int currentMaxPosition = (int)rectangular_to_y/itemSpacing;
+
+        if( currentMaxPosition == screenLeftPosition || currentMaxPosition== (screenLeftPosition+1)){//进行北京页面滚动
+            Log.d(TAG, "移动到左边某个位置");
+            if( timeChooseMoveIntreface != null ){
+                timeChooseMoveIntreface.timeChooseMove(false, itemSpacing);
+            }
+        }
+
+
+    }
+
+    private void scroll2RightOnePosition(){
+
+        float screenRight = paramInt1+ScreenUtil.getScreenWidth(context);
+        int screenRightPosition = (int)screenRight/itemSpacing;
+        int currentMaxPosition = (int)rectangular_to_y/itemSpacing;
+
+        if( currentMaxPosition == screenRightPosition || currentMaxPosition == (screenRightPosition-1)){
+            Log.d(TAG, "移动到右边某个位置");
+            if( timeChooseMoveIntreface != null ){
+                timeChooseMoveIntreface.timeChooseMove(true, itemSpacing);
+            }
+        }
+
+    }
+
+
+    /**
+     * view移动接口
+     */
+    interface TimeChooseMoveIntreface{
+
+        /**
+         * 移动回调
+         * @param direction 移动距离
+         * @param distance t:移动到右边某个位置 f:移动到左边某个位置
+         */
+        void timeChooseMove(boolean direction, float distance);
+    }
 }
