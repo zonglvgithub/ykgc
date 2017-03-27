@@ -120,4 +120,15 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
 //            scrollView.scrollBy((int)-distance,0);
         }
     }
+
+    @Override
+    public void showSelectedMettingRoomDetail(boolean show) {
+        if(show){
+            toast = Toast.makeText( MainActivity.this, "准备显示已选定会议室信息",Toast.LENGTH_SHORT);
+            Log.d("TimeChooseView", "======================准备显示已选定会议室信息======================");
+        }else{
+            toast = Toast.makeText( MainActivity.this, "准备隐藏已选定会议室信息",Toast.LENGTH_SHORT);
+            Log.d("TimeChooseView", "======================准备隐藏已选定会议室信息======================");
+        }
+    }
 }

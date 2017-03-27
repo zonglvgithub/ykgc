@@ -26,7 +26,6 @@ public class TimeChooseView extends View {
 
     public static final String TAG = "TimeChooseView";
 
-    public  long lastMoveTime ;//上一次动画移动时见
 
     private Context context;
     private int statusBarHeight;//状态栏高度
@@ -132,6 +131,8 @@ public class TimeChooseView extends View {
         this.timeChooseMoveIntreface = timeChooseMoveIntreface;
     }
 
+
+
     public void setTextSpacing(int textSpacing) {
         this.textSpacing = textSpacing;
         itemSpacing = (int) Math.abs(ScreenUtil.dip2pxf(context, textSpacing));
@@ -148,6 +149,36 @@ public class TimeChooseView extends View {
     public void setPosition(int position) {
         this.position = position;
         isPosition = true;
+    }
+    public boolean isShowCheckedRect() {
+        return showCheckedRect;
+    }
+
+    public void setShowCheckedRect(boolean showCheckedRect) {
+        this.showCheckedRect = showCheckedRect;
+    }
+
+    /**
+     * 展示已选择会议室框
+     * @param show t:显示 f:隐藏
+     */
+    private void showSelectTimeRecr( boolean show){
+        setShowCheckedRect(show);
+        /**
+         * 第一次显示可选区域，回调展示选择会意思详情页面
+         */
+
+        if(show){
+            if( timeChooseMoveIntreface != null ){
+                timeChooseMoveIntreface.showSelectedMettingRoomDetail(show);
+            }
+        }else{
+            if( timeChooseMoveIntreface != null ){
+                timeChooseMoveIntreface.showSelectedMettingRoomDetail(show);
+            }
+        }
+
+
     }
 
     /**
@@ -288,8 +319,9 @@ public class TimeChooseView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
+//        moveScrollViewOnTouch();
         invalidate();
-        Log.e("==================", "    =====       ");
+        Log.e(TAG, "OnTouchEvent 执行 ");
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -350,6 +382,7 @@ public class TimeChooseView extends View {
                         rectangular_to_y = rectangular_to_mobile;
                         rectangular_y = rectangular_mobile;
                     }
+
                 }
 
                 break;
@@ -365,16 +398,17 @@ public class TimeChooseView extends View {
                 if (Math.abs(currentX - downRawX) < 2 && Math.abs(currentY - downRawY) < 2) {
 
                     boolean clickPositionSlected = clickPositionSelected((int) event.getRawX(), event.getRawY());
-                    if (showCheckedRect) {//已选中进行移动
+                    if (isShowCheckedRect()) {//已选中进行移动
 
                         checkPositon = click2Position(currentX, currentY);
                         move2Click(itemSpacing);
 
                     } else {//未选中，选中点击取
-                        showCheckedRect = true;
+                        showSelectTimeRecr(true);
+
                         checkPositon = click2Position(currentX, currentY);
 
-                        if (showCheckedRect) {
+                        if (isShowCheckedRect()) {
                             rectangular_y = (minimum_y + (checkPositon * itemSpacing));
                             rectangular_to_y = (minimum_y + (checkPositon * itemSpacing)) + itemSpacing;
                         }
@@ -621,6 +655,8 @@ public class TimeChooseView extends View {
 
         } else {
             addSuccess = false;
+            invalidate();
+            showSelectTimeRecr(false);
         }
 
         return addSuccess;
@@ -636,7 +672,9 @@ public class TimeChooseView extends View {
         if( anim != null && anim.isRunning()) return false;
         scroll2RightOnePosition();
 
-        showCheckedRect = true;
+
+        if(!isShowCheckedRect()){showSelectTimeRecr(true);}
+
         int maxPosition = BWScreenWidth / itemSpacing;//当前view最大item下标
         int currentSellectMaxPosition = (int) rectangular_to_y / itemSpacing;
 
@@ -679,7 +717,7 @@ public class TimeChooseView extends View {
      */
     private void scroll2LeftOnePosition(){
 
-        float screenLeft_x = paramInt1;
+        float screenLeft_x = getScreenLeft_x();
         int screenLeftPosition = (int)screenLeft_x/itemSpacing;
         int currentMaxPosition = (int)rectangular_to_y/itemSpacing;
 
@@ -693,9 +731,10 @@ public class TimeChooseView extends View {
 
     }
 
+
     private void scroll2RightOnePosition(){
 
-        float screenRight = paramInt1+ScreenUtil.getScreenWidth(context);
+        float screenRight = getScreenRight_x();
         int screenRightPosition = (int)screenRight/itemSpacing;
         int currentMaxPosition = (int)rectangular_to_y/itemSpacing;
 
@@ -706,6 +745,22 @@ public class TimeChooseView extends View {
             }
         }
 
+    }
+
+    /**
+     * 返回屏幕右边框距离scrollView左边的x
+     * @return
+     */
+    private float getScreenRight_x(){
+        return paramInt1+ScreenUtil.getScreenWidth(context);
+    }
+
+    /**
+     * 返回屏幕左边框距离scrollview左边的距离
+     * @return
+     */
+    private float getScreenLeft_x(){
+        return paramInt1;
     }
 
 
@@ -720,5 +775,29 @@ public class TimeChooseView extends View {
          * @param distance t:移动到右边某个位置 f:移动到左边某个位置
          */
         void timeChooseMove(boolean direction, float distance);
+
+        /**
+         * 隐藏/显示会议室已选详情布局
+         * @param show t:显示详情布局 f:隐藏详情布局
+         */
+        void showSelectedMettingRoomDetail(boolean show);
     }
+
+    /**
+     * 当选择框移动到屏幕边缘父ScrollView进行滚动
+     */
+    private void moveScrollViewOnTouch(){
+        float screenRight = getScreenRight_x();
+        float screenleft = getScreenLeft_x();
+        if( timeChooseMoveIntreface != null && (rectangular_to_y>screenRight )){
+            timeChooseMoveIntreface.timeChooseMove(true, itemSpacing);
+            addPick();
+        }
+        if( timeChooseMoveIntreface != null && (rectangular_to_y < screenleft)){
+            timeChooseMoveIntreface.timeChooseMove(true, -itemSpacing);
+            removePick();
+        }
+    }
+    
+
 }
