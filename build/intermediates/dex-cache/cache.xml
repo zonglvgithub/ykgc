@@ -3,6 +3,15 @@
 
     <item
         is-multidex="false"
+        jar="/Users/zhanghuawei/Android/Dev/demo/ykgc/app/build/intermediates/exploded-aar/com.android.support.constraint/constraint-layout/1.0.2/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="/Users/zhanghuawei/Android/Dev/demo/ykgc/app/build/intermediates/pre-dexed/debug/com.android.support.constraint-constraint-layout-1.0.2_a7f81364c2f7db83a7295070eca15c3735966bc1.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/Users/zhanghuawei/Android/Dev/demo/ykgc/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.2.0/jars/classes.jar"
         jumboMode="false"
         optimize="true"
@@ -72,6 +81,15 @@
         revision="25.0.2"
         sha1="67eb33110dbacb46a48175b08ae0c96761d2c17d">
         <dex dex="/Users/zhanghuawei/Android/Dev/demo/ykgc/app/build/intermediates/pre-dexed/debug/com.android.support-support-compat-25.2.0_7849262b721dca9b5ea0bd28662304b0b99addf0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/zhanghuawei/Android/sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="/Users/zhanghuawei/Android/Dev/demo/ykgc/app/build/intermediates/pre-dexed/debug/constraint-layout-solver-1.0.2_cea1de83a835d07f6f4156b17c2a0ef72a4e868c.jar" />
     </item>
     <item
         is-multidex="false"

@@ -1,6 +1,7 @@
-package shoplistdownload.example.com.myapplication;
+package shoplistdownload.example.com.myapplication.modoule;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,14 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import shoplistdownload.example.com.myapplication.My_ScrollView;
+import shoplistdownload.example.com.myapplication.R;
+import shoplistdownload.example.com.myapplication.ScreenUtil;
+import shoplistdownload.example.com.myapplication.TimeChooseView;
+import shoplistdownload.example.com.myapplication.TimeMode;
+import shoplistdownload.example.com.myapplication.modoule.recycle.activity.RecycleListActivity;
+import shoplistdownload.example.com.myapplication.modoule.recycle.adapter.RylListAdapter;
 
 
 public class MainActivity extends Activity implements View.OnClickListener,TimeChooseView.TimeChooseMoveIntreface {
@@ -21,6 +30,7 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
 
     private TextView tv_add_btn;
     private TextView tv_remove_btn;
+    private TextView tv_listActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +42,12 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
         scrollView = (My_ScrollView) findViewById(R.id.scrollView);
         tv_add_btn = (TextView) findViewById(R.id.tv_add_btn);
         tv_remove_btn = (TextView) findViewById(R.id.tv_remove_btn);
+        tv_listActivity = (TextView) findViewById(R.id.tv_listActivity);
 
 
         tv_add_btn.setOnClickListener(this);
         tv_remove_btn.setOnClickListener(this);
+        tv_listActivity.setOnClickListener( this );
 
         for (int i = 2; i < 23; i++) {
             TimeMode timeMode = new TimeMode();
@@ -107,17 +119,20 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
                     toast.show();
                 }
                 break;
+            case R.id.tv_listActivity:
+                Intent intent = new Intent( this, RecycleListActivity.class);
+                startActivity( intent);
+                break;
         }
     }
 
     @Override
-    public void timeChooseMove(boolean direction, float distance) {
+    public void timeChooseMove( Object viewHolder, boolean direction, float distance) {
+
         if( direction ){
             scrollView.scrollMoveTo(0 ,distance);
-//            scrollView.scrollBy((int)distance,,0);
         }else{
             scrollView.scrollMoveTo(0,-distance);
-//            scrollView.scrollBy((int)-distance,0);
         }
     }
 

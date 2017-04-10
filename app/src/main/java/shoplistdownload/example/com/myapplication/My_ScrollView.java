@@ -17,6 +17,17 @@ public class My_ScrollView extends HorizontalScrollView {
 
     private ScrollViewListener scrollViewListener = null;
 
+    private Object viewHolderl;
+
+
+    public Object getViewHolderl() {
+        return viewHolderl;
+    }
+
+    public void setViewHolderl(Object viewHolderl) {
+        this.viewHolderl = viewHolderl;
+    }
+
     public My_ScrollView(Context paramContext) {
         super(paramContext);
     }

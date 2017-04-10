@@ -25,6 +25,7 @@ import java.util.StringTokenizer;
 public class TimeChooseView extends View {
 
     public static final String TAG = "TimeChooseView";
+    public static final int S = 5;
 
 
     private Context context;
@@ -91,6 +92,9 @@ public class TimeChooseView extends View {
 
     private ValueAnimator anim;//移动动画
     private TimeChooseMoveIntreface timeChooseMoveIntreface;
+    private boolean rectMoving =false;//t:选中举行正在移动
+
+    private Object ViewHolder;
 
     public TimeChooseView(Context context) {
         super(context);
@@ -158,6 +162,14 @@ public class TimeChooseView extends View {
         this.showCheckedRect = showCheckedRect;
     }
 
+    public Object getViewHolder() {
+        return ViewHolder;
+    }
+
+    public void setViewHolder(Object viewHolder) {
+        ViewHolder = viewHolder;
+    }
+
     /**
      * 展示已选择会议室框
      * @param show t:显示 f:隐藏
@@ -199,7 +211,6 @@ public class TimeChooseView extends View {
     protected void onDraw(Canvas canvas) {
 
         super.onDraw(canvas);
-
 
         int h = textSpacing / 2;
         NotChoosearea notChoosearea = null;
@@ -319,14 +330,14 @@ public class TimeChooseView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-//        moveScrollViewOnTouch();
+        rectMoving = false;
         invalidate();
         Log.e(TAG, "OnTouchEvent 执行 ");
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-
+                rectMoving = false;
                 Log.d(TAG, "DOWN");
 
                 lastY = (int) event.getRawX();
@@ -374,7 +385,7 @@ public class TimeChooseView extends View {
                         }
                     }
                 } else if (isMoveRectangular) {//矩形选择框移动
-
+                    rectMoving = true;
                     float rectangular_mobile = rectangular_x_begin + (moveY - lastY);
                     float rectangular_to_mobile = rectangular_x_end + (moveY - lastY);
 
@@ -382,6 +393,8 @@ public class TimeChooseView extends View {
                         rectangular_to_y = rectangular_to_mobile;
                         rectangular_y = rectangular_mobile;
                     }
+
+//                    moveScrollViewOnTouch();
 
                 }
 
@@ -391,7 +404,7 @@ public class TimeChooseView extends View {
 
                 Log.d(TAG, "UP");
 
-
+                rectMoving = false;
                 float currentX = event.getX();
                 float currentY = event.getY();
 
@@ -711,6 +724,51 @@ public class TimeChooseView extends View {
         return removeSuccess;
     }
 
+//    ...............
+    public boolean move2NextPOsition() {
+
+        if( anim != null && anim.isRunning()) return false;
+        scroll2RightOnePosition();
+
+        int maxPosition = BWScreenWidth / itemSpacing;//当前view最大item下标
+        int currentSellectMaxPosition = (int) rectangular_to_y / itemSpacing;
+
+        boolean removeSuccess;
+
+        Log.d(TAG, "max item position index:" + maxPosition);
+        Log.d(TAG, "current max item position index:" + currentSellectMaxPosition);
+
+        if (currentSellectMaxPosition < maxPosition) {//当前状态可进行item的赠
+
+            Log.d(TAG , "=====================================================");
+            Log.d(TAG , "准备偏移  开始值"+rectangular_to_y+" 结束值："+(rectangular_to_y+itemSpacing) +" spacing:"+itemSpacing);
+
+            anim = ValueAnimator.ofFloat(rectangular_y, rectangular_y + itemSpacing);
+            anim.setDuration(300);
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float currentValue = (float) animation.getAnimatedValue();
+//                    if( currentValue>=){ }
+                    rectangular_y = currentValue;
+                    rectangular_to_y =currentValue + rectangular_x_end - rectangular_x_begin;
+                    invalidate();
+
+
+
+                    Log.d(TAG , "cuurent value is " + currentValue);
+                }
+            });
+            anim.start();
+
+            removeSuccess = true;
+        } else {
+            removeSuccess = false;
+        }
+
+        return removeSuccess;
+    }
+
 
     /**
      * 当前选择最大item存在屏幕左边进行背景像item递减反方向移动
@@ -724,7 +782,7 @@ public class TimeChooseView extends View {
         if( currentMaxPosition == screenLeftPosition || currentMaxPosition== (screenLeftPosition+1)){//进行北京页面滚动
             Log.d(TAG, "移动到左边某个位置");
             if( timeChooseMoveIntreface != null ){
-                timeChooseMoveIntreface.timeChooseMove(false, itemSpacing);
+                timeChooseMoveIntreface.timeChooseMove(getViewHolder(), false, itemSpacing);
             }
         }
 
@@ -741,7 +799,7 @@ public class TimeChooseView extends View {
         if( currentMaxPosition == screenRightPosition || currentMaxPosition == (screenRightPosition-1)){
             Log.d(TAG, "移动到右边某个位置");
             if( timeChooseMoveIntreface != null ){
-                timeChooseMoveIntreface.timeChooseMove(true, itemSpacing);
+                timeChooseMoveIntreface.timeChooseMove( getViewHolder(), true, itemSpacing);
             }
         }
 
@@ -767,14 +825,14 @@ public class TimeChooseView extends View {
     /**
      * view移动接口
      */
-    interface TimeChooseMoveIntreface{
+    public interface TimeChooseMoveIntreface{
 
         /**
          * 移动回调
          * @param direction 移动距离
          * @param distance t:移动到右边某个位置 f:移动到左边某个位置
          */
-        void timeChooseMove(boolean direction, float distance);
+        void timeChooseMove( Object viewHolder, boolean direction, float distance);
 
         /**
          * 隐藏/显示会议室已选详情布局
@@ -790,14 +848,14 @@ public class TimeChooseView extends View {
         float screenRight = getScreenRight_x();
         float screenleft = getScreenLeft_x();
         if( timeChooseMoveIntreface != null && (rectangular_to_y>screenRight )){
-            timeChooseMoveIntreface.timeChooseMove(true, itemSpacing);
-            addPick();
+            timeChooseMoveIntreface.timeChooseMove( getViewHolder(),true, itemSpacing);
+            move2NextPOsition();
         }
         if( timeChooseMoveIntreface != null && (rectangular_to_y < screenleft)){
-            timeChooseMoveIntreface.timeChooseMove(true, -itemSpacing);
+            timeChooseMoveIntreface.timeChooseMove(getViewHolder(),true, -itemSpacing);
             removePick();
         }
     }
-    
+
 
 }

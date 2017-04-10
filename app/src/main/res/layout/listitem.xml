@@ -1,10 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/black">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +14,7 @@
             <TextView
                 android:id="@+id/tv_add_btn"
                 android:layout_width="150dip"
-                android:layout_height="60dip"
+                android:layout_height="40dip"
                 android:layout_alignParentLeft="true"
                 android:background="@android:color/holo_red_light"
                 android:gravity="center"
@@ -28,7 +24,7 @@
             <TextView
                 android:id="@+id/tv_remove_btn"
                 android:layout_width="150dip"
-                android:layout_height="60dip"
+                android:layout_height="40dip"
                 android:layout_alignParentRight="true"
                 android:background="@android:color/holo_red_light"
                 android:gravity="center"
@@ -41,8 +37,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="100dip"
-            android:layout_marginTop="100dip"
             android:background="@android:color/white"
             android:scrollbars="horizontal">
 
@@ -61,15 +55,5 @@
 
 
         </shoplistdownload.example.com.myapplication.My_ScrollView>
-
-        <TextView
-            android:id="@+id/tv_listActivity"
-            android:layout_width="150dip"
-            android:layout_height="60dip"
-            android:layout_alignParentLeft="true"
-            android:background="@android:color/holo_red_light"
-            android:gravity="center"
-            android:text="ListActivity"
-            android:textColor="@android:color/white" />
     </LinearLayout>
-</ScrollView>
+</RelativeLayout>
