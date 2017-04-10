@@ -49,27 +49,29 @@ public class RylListAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(final int position, View view, ViewGroup viewGroup) {
+    public View getView(final int position, View contentView , ViewGroup viewGroup) {
 
-        if( view == null ){
+        if( contentView == null ){
             viewHolder = new ViewHolder();
-            view = LayoutInflater.from(activity).inflate(R.layout.listitem,viewGroup,false);
-            viewHolder.tv_add_btn = (TextView) view.findViewById(R.id.tv_add_btn);
-            viewHolder.tv_remove_btn = (TextView) view.findViewById(R.id.tv_remove_btn);
-            viewHolder.scrollView = (My_ScrollView) view.findViewById(R.id.scrollView);
-            viewHolder.timeChooseView = (TimeChooseView) view.findViewById(R.id.time_choose);
+            contentView = LayoutInflater.from(activity).inflate(R.layout.listitem,viewGroup,false);
+            viewHolder.tv_add_btn = (TextView) contentView.findViewById(R.id.tv_add_btn);
+            viewHolder.tv_remove_btn = (TextView) contentView.findViewById(R.id.tv_remove_btn);
+            viewHolder.scrollView = (My_ScrollView) contentView.findViewById(R.id.scrollView);
+            viewHolder.timeChooseView = (TimeChooseView) contentView.findViewById(R.id.time_choose);
 
-            view.setTag(viewHolder);
+            contentView.setTag(viewHolder);
         }else{
-            viewHolder = (ViewHolder) view.getTag();
+            viewHolder = (ViewHolder) contentView.getTag();
         }
 
+        final ViewHolder currentViewHolder = viewHolder;
 
         viewHolder.tv_add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                boolean addSuccess = viewHolder.timeChooseView.addPick();
+
+                boolean addSuccess = currentViewHolder.timeChooseView.addPick();
                 if( toast != null ) toast.cancel();
 
                 if(addSuccess){
@@ -86,7 +88,7 @@ public class RylListAdapter extends BaseAdapter{
             public void onClick(View view) {
 
                 if( toast != null ) toast.cancel();
-                boolean removeSuccess = viewHolder.timeChooseView.removePick();
+                boolean removeSuccess = currentViewHolder.timeChooseView.removePick();
                 if(removeSuccess){
                     toast = Toast.makeText( activity, "删除成功"+position,Toast.LENGTH_SHORT);
                 }else{
@@ -155,7 +157,7 @@ public class RylListAdapter extends BaseAdapter{
         viewHolder.timeChooseView.setWidthHeight(ScreenUtil.dip2px(activity, timeList.size() * textSpacing + 20), ScreenUtil.dip2px(activity, 80));// 重新绘制宽高，不然自定义控件放在ScrollView里面没有高度不显示
 
 
-        return view;
+        return contentView;
     }
 
     private Toast toast;
