@@ -212,6 +212,8 @@ public class TimeChooseView extends View {
 
         super.onDraw(canvas);
 
+        Log.d(TAG, "开始绘制页面");
+
         int h = textSpacing / 2;
         NotChoosearea notChoosearea = null;
         int spacing = (int) Math.abs(ScreenUtil.dip2pxf(context, textSpacing));
@@ -394,7 +396,6 @@ public class TimeChooseView extends View {
                         rectangular_y = rectangular_mobile;
                     }
 
-//                    moveScrollViewOnTouch();
 
                 }
 

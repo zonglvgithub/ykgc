@@ -24,7 +24,10 @@ import shoplistdownload.example.com.myapplication.TimeMode;
 
 public class RylListAdapter extends BaseAdapter{
 
+    public static final String TAG = "RylListAdapter";
+
     List<TimeMode> timeList = new ArrayList<>();
+    List<Integer> list = new ArrayList<>();
     int textSpacing = 60;
     private ViewHolder viewHolder;
     private Activity activity;
@@ -35,7 +38,7 @@ public class RylListAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return 10;
+        return 50;
     }
 
     @Override
@@ -98,17 +101,23 @@ public class RylListAdapter extends BaseAdapter{
             }
         });
 
-        for (int j = 2; j < 23; j++) {
-            TimeMode timeMode = new TimeMode();
-            timeMode.time = j + "时";
-            timeMode.isSelected = false;
-            TimeMode timeMode1 = new TimeMode();
-            timeMode1.time = "";
-            timeMode1.isSelected = false;
+//        if( position >-1) return contentView;
 
-            timeList.add(timeMode);
-            timeList.add(timeMode1);
+        if( timeList == null || timeList.size()<1){
+            for (int j = 2; j < 23; j++) {
+                TimeMode timeMode = new TimeMode();
+                timeMode.time = j + "时";
+                timeMode.isSelected = false;
+                TimeMode timeMode1 = new TimeMode();
+                timeMode1.time = "";
+                timeMode1.isSelected = false;
+
+                timeList.add(timeMode);
+                timeList.add(timeMode1);
+            }
+            Log.d(TAG, "初始化时间资源");
         }
+
         viewHolder.timeChooseView.setTimeChooseMoveIntreface(new TimeChooseView.TimeChooseMoveIntreface() {
             @Override
             public void timeChooseMove( Object viewHolder,boolean direction, float distance) {
@@ -125,17 +134,21 @@ public class RylListAdapter extends BaseAdapter{
 
             }
         });
+
         viewHolder.timeChooseView.setTime(timeList);
         viewHolder.timeChooseView.setViewHolder(viewHolder);
         viewHolder.scrollView.setViewHolderl(viewHolder);
         viewHolder.timeChooseView.setTextSpacing(textSpacing);
         viewHolder.timeChooseView.setPosition(3);
-        List<Integer> list = new ArrayList<>();
 
-        list.add(5);
-        list.add(7);
-        list.add(8);
-        list.add(10);
+
+        if( list == null || list.size()<1){
+            list.add(5);
+            list.add(7);
+            list.add(8);
+            list.add(10);
+        }
+
 
 
         viewHolder.timeChooseView.setPositionList(list);
