@@ -53,15 +53,10 @@ public class TimeChooseView extends View {
     private Bitmap bitmap;//按钮图片
     private float bitmap_width;//按钮宽度
     private float bitmap_radius;//按钮半径
-
     private float recordCenterY2;//记录按钮2圆心y轴
-
     private float butBottomCircle_y;//按钮2起始y轴
-
     private float linecCoarse = 1;//线宽
-
     private int paramInt1 = 0;//scroll移动y轴  解决控件点击坐标错位
-
     private float line_x;//表格起始x轴
 
     //矩形
@@ -92,7 +87,6 @@ public class TimeChooseView extends View {
 
     private ValueAnimator anim;//移动动画
     private TimeChooseMoveIntreface timeChooseMoveIntreface;
-    private boolean rectMoving =false;//t:选中举行正在移动
 
     private Object ViewHolder;
 
@@ -160,7 +154,9 @@ public class TimeChooseView extends View {
 
     public void setShowCheckedRect(boolean showCheckedRect) {
         this.showCheckedRect = showCheckedRect;
+
     }
+
 
     public Object getViewHolder() {
         return ViewHolder;
@@ -332,14 +328,12 @@ public class TimeChooseView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        rectMoving = false;
         invalidate();
         Log.e(TAG, "OnTouchEvent 执行 ");
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-                rectMoving = false;
                 Log.d(TAG, "DOWN");
 
                 lastY = (int) event.getRawX();
@@ -387,7 +381,6 @@ public class TimeChooseView extends View {
                         }
                     }
                 } else if (isMoveRectangular) {//矩形选择框移动
-                    rectMoving = true;
                     float rectangular_mobile = rectangular_x_begin + (moveY - lastY);
                     float rectangular_to_mobile = rectangular_x_end + (moveY - lastY);
 
@@ -405,7 +398,6 @@ public class TimeChooseView extends View {
 
                 Log.d(TAG, "UP");
 
-                rectMoving = false;
                 float currentX = event.getX();
                 float currentY = event.getY();
 
@@ -565,6 +557,7 @@ public class TimeChooseView extends View {
 
     private int BWScreenWidth;
     private int BWScreenHeight;
+    private int itemSize;
 
 
     @Override
@@ -572,9 +565,10 @@ public class TimeChooseView extends View {
         setMeasuredDimension(BWScreenWidth, BWScreenHeight);
     }
 
-    public void setWidthHeight(int width, int height) {
+    public void setWidthHeight(int width, int height , int itemSize) {
         this.BWScreenHeight = height;
         this.BWScreenWidth = width;
+        this.itemSize = itemSize;
     }
 
 
@@ -598,12 +592,25 @@ public class TimeChooseView extends View {
         if( anim != null && anim.isRunning()) return ;
 
         float rectangular_y1 = (minimum_y + (checkPositon * spacing));
-        float rectangular_to_y1 = (minimum_y + (checkPositon * spacing)) + rectangular_x_end - rectangular_x_begin;
+        int lastCheckPosition = click2Position(rectangular_y, 0);
+        int positionDiatance = Math.abs(checkPositon - lastCheckPosition);
 
-        int lastPosition = click2Position(rectangular_y, 0);
+        int checkItemSize = (int) ((rectangular_x_end - rectangular_x_begin)/spacing);
+        if( checkPositon +positionDiatance == itemSize){//已选区域已经覆盖到右边最大值
+            return;
+
+        } else if( checkPositon +checkItemSize>itemSize){//已选区域最多移动到右边最大值
+            checkPositon = itemSize-checkItemSize;
+            rectangular_y1 = (minimum_y + (checkPositon * spacing));
+        }
+
+
+        float rectangular_to_y1 = (minimum_y + (checkPositon * spacing)) +(rectangular_x_end - rectangular_x_begin);
+
+
 
         int millisInFuture = 200;
-        int positionDiatance = Math.abs(checkPositon - lastPosition);
+
         if (positionDiatance > 0) {
             millisInFuture = positionDiatance * 100;
             if (millisInFuture > 1000) {
@@ -726,7 +733,7 @@ public class TimeChooseView extends View {
     }
 
 //    ...............
-    public boolean move2NextPOsition() {
+    public boolean move2NextPosition() {
 
         if( anim != null && anim.isRunning()) return false;
         scroll2RightOnePosition();
@@ -850,7 +857,7 @@ public class TimeChooseView extends View {
         float screenleft = getScreenLeft_x();
         if( timeChooseMoveIntreface != null && (rectangular_to_y>screenRight )){
             timeChooseMoveIntreface.timeChooseMove( getViewHolder(),true, itemSpacing);
-            move2NextPOsition();
+            move2NextPosition();
         }
         if( timeChooseMoveIntreface != null && (rectangular_to_y < screenleft)){
             timeChooseMoveIntreface.timeChooseMove(getViewHolder(),true, -itemSpacing);

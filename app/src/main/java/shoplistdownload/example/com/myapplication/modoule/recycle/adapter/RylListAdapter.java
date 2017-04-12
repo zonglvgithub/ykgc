@@ -51,9 +51,12 @@ public class RylListAdapter extends BaseAdapter{
         return 0;
     }
 
+
     @Override
     public View getView(final int position, View contentView , ViewGroup viewGroup) {
 
+
+        Log.d(TAG, "getView 调用");
         if( contentView == null ){
             viewHolder = new ViewHolder();
             contentView = LayoutInflater.from(activity).inflate(R.layout.listitem,viewGroup,false);
@@ -134,7 +137,7 @@ public class RylListAdapter extends BaseAdapter{
 
             }
         });
-
+        //TODO：数据源支持初始已选框position 保证getView item 显示数据不会错乱
         viewHolder.timeChooseView.setTime(timeList);
         viewHolder.timeChooseView.setViewHolder(viewHolder);
         viewHolder.scrollView.setViewHolderl(viewHolder);
@@ -167,7 +170,7 @@ public class RylListAdapter extends BaseAdapter{
             }
         });
 
-        viewHolder.timeChooseView.setWidthHeight(ScreenUtil.dip2px(activity, timeList.size() * textSpacing + 20), ScreenUtil.dip2px(activity, 80));// 重新绘制宽高，不然自定义控件放在ScrollView里面没有高度不显示
+        viewHolder.timeChooseView.setWidthHeight(ScreenUtil.dip2px(activity, timeList.size() * textSpacing + 20), ScreenUtil.dip2px(activity, 80), timeList.size());// 重新绘制宽高，不然自定义控件放在ScrollView里面没有高度不显示
 
 
         return contentView;
