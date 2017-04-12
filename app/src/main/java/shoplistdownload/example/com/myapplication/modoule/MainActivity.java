@@ -63,7 +63,7 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
         timeChooseView.setTimeChooseMoveIntreface( this );
         timeChooseView.setTime(timeList);
         timeChooseView.setTextSpacing(textSpacing);
-        timeChooseView.setPosition(3);
+        timeChooseView.setPosition(2);
         List<Integer> list = new ArrayList<>();
 
         list.add(5);
