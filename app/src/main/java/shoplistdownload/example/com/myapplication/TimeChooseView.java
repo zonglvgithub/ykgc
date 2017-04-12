@@ -486,6 +486,10 @@ public class TimeChooseView extends View {
                 int end = (int) ((rectangular_to_y - minimum_y) / itemSpacing);
                 String endTimeStr;
                 if (end % 2 == 0) {
+
+                    if(end >= timeList.size()){
+                        end = timeList.size()-1;
+                    }
                     endTimeStr = timeList.get(end).time;
                 } else {
                     StringTokenizer st = new StringTokenizer(timeList.get((end - 1)).time, ":");
