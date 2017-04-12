@@ -25,7 +25,6 @@ import java.util.StringTokenizer;
 public class TimeChooseView extends View {
 
     public static final String TAG = "TimeChooseView";
-    public static final int S = 5;
 
 
     private Context context;
@@ -70,8 +69,8 @@ public class TimeChooseView extends View {
     private float notChoose_y;
     private float notChoose_to_y;
 
-    private float lastX;//点击位置的x
-    private float lastY;//点击位置的y
+    private float clickRawY;//点击位置的x
+    private float clickRawX;//点击位置的y
     private float moveY;//记录移动时的y轴
 
     private boolean isMoveButton2;//是否移动按钮二
@@ -336,13 +335,13 @@ public class TimeChooseView extends View {
 
                 Log.d(TAG, "DOWN");
 
-                lastY = (int) event.getRawX();
-                lastX = (int) (event.getRawY() - statusBarHeight);
+                clickRawX = (int) event.getRawX();
+                clickRawY = (int) (event.getRawY() - statusBarHeight);
 
                 downRawX = event.getX();
                 downRawY = event.getY();
 
-                Log.e(TAG, "点击的坐标 x：" + lastY + " y：：" + lastX);
+                Log.e(TAG, "点击的坐标 x：" + clickRawX + " y：：" + clickRawY);
 
                 //圆心坐标
                 recordCenterY2 = (butBottomCircle_y + bitmap_radius - paramInt1);
@@ -354,11 +353,11 @@ public class TimeChooseView extends View {
                 isMoveButton2 = false;
                 isMoveRectangular = false;
 
-                if (lastY > recordCenterY2 - ScreenUtil.dip2px(context, 15) && lastY < recordCenterY2 + ScreenUtil.dip2px(context, 15)) {//是否按钮2移动
+                if (clickRawX > recordCenterY2 - ScreenUtil.dip2px(context, 15) && clickRawX < recordCenterY2 + ScreenUtil.dip2px(context, 15)) {//是否按钮2移动
                     isMoveButton2 = true;
                     getParent().requestDisallowInterceptTouchEvent(true);
-                } else if (lastX < (screenHeigth * 5 - statusBarHeight - line_x) && lastX < ScreenUtil.getScreenHeight(context)
-                        && lastY > rectangular_x_begin && lastY < rectangular_x_end) {//是否矩形框移动
+                } else if (clickRawY < ScreenUtil.getScreenHeight(context)
+                        && clickRawX > rectangular_x_begin && clickRawX < rectangular_x_end) {//是否矩形框移动
                     isMoveRectangular = true;
                     rectangular_spacing = Math.abs(rectangular_to_y - rectangular_y);
                     getParent().requestDisallowInterceptTouchEvent(true);
@@ -381,8 +380,8 @@ public class TimeChooseView extends View {
                         }
                     }
                 } else if (isMoveRectangular) {//矩形选择框移动
-                    float rectangular_mobile = rectangular_x_begin + (moveY - lastY);
-                    float rectangular_to_mobile = rectangular_x_end + (moveY - lastY);
+                    float rectangular_mobile = rectangular_x_begin + (moveY - clickRawX);
+                    float rectangular_to_mobile = rectangular_x_end + (moveY - clickRawX);
 
                     if (rectangular_mobile > minimum_y && rectangular_to_mobile < maximum_y) {
                         rectangular_to_y = rectangular_to_mobile;
@@ -425,7 +424,7 @@ public class TimeChooseView extends View {
 
                 if (isMoveButton2) {//按钮2移动
                     float mobileY = recordCenterY2;
-                    float theOffset = ((moveY - paramInt1 - lastY) / itemSpacing);
+                    float theOffset = ((moveY - paramInt1 - clickRawX) / itemSpacing);
                     int mobileNumber = Math.abs((int) theOffset);
                     float theOffset1 = (theOffset - mobileNumber);
                     if (theOffset > 0) {//下移
