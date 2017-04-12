@@ -226,6 +226,7 @@ public class TimeChooseView extends View {
         //时间画笔
         Paint paintText = new Paint();
         paintText.setColor(context.getResources().getColor(R.color.black));
+        paintText.setAntiAlias(true);
         paintText.setTextSize(ScreenUtil.dip2pxf(context, textSize));
         canvas.drawLine(0f, screenHeigth - bottomH, BWScreenWidth, screenHeigth - bottomH, paintLine);// 画底部横线
         minimum_y = ScreenUtil.dip2pxf(context, (h - (textSize / 2.5f)));
@@ -292,6 +293,8 @@ public class TimeChooseView extends View {
             paintLine.setColor(context.getResources().getColor(R.color.red));
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.time_select_view_button_);
         } else {
+
+            paintLine.setColor(context.getResources().getColor(R.color.green));
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.time_select_view_button);
         }
         for (int i = 0; i < notChooseareaList.size(); i++) {//浮框占用已经选择区域切换可选（绿色）不可选（红色）状态
@@ -306,15 +309,21 @@ public class TimeChooseView extends View {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.time_select_view_button_);
                 break;
             } else {
+                paintLine.setColor(context.getResources().getColor(R.color.green));
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.time_select_view_button);
             }
         }
 
         if (showCheckedRect) {//显示举行已选框
+            paintLine.setStrokeWidth(3);
+            canvas.drawLine( rectangular_y, screenHeigth - bottomH - lineH, rectangular_y, screenHeigth - bottomH, paintLine);
 
-            canvas.drawRect(rectangular_y, screenHeigth - bottomH - lineH, rectangular_to_y, screenHeigth - bottomH, paint);//画矩形选择框
+            canvas.drawRect( rectangular_y, screenHeigth - bottomH - lineH, rectangular_to_y, screenHeigth - bottomH, paint);//画矩形选择框
+
+            canvas.drawLine( rectangular_to_y, screenHeigth - bottomH - lineH, rectangular_to_y, screenHeigth - bottomH, paintLine);
             //获取按钮初始位置
             butBottomCircle_y = rectangular_to_y - bitmap_radius;
+            paint.setColor(context.getResources().getColor(R.color.white));
             canvas.drawBitmap(bitmap, butBottomCircle_y, screenHeigth - bottomH - lineH / 3 * 2, paint);//按钮2
         }
 
@@ -387,8 +396,6 @@ public class TimeChooseView extends View {
                         rectangular_to_y = rectangular_to_mobile;
                         rectangular_y = rectangular_mobile;
                     }
-
-
                 }
 
                 break;
@@ -418,7 +425,6 @@ public class TimeChooseView extends View {
                             rectangular_to_y = (minimum_y + (checkPositon * itemSpacing)) + itemSpacing;
                         }
                     }
-
 
                 }
 
