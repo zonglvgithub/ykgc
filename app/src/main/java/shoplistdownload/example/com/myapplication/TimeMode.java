@@ -5,6 +5,7 @@ package shoplistdownload.example.com.myapplication;
  */
 
 public class TimeMode {
+
     public String time;
     public boolean isSelected;
 
