@@ -51,18 +51,18 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
 
         for (int i = 2; i < 23; i++) {
             TimeMode timeMode = new TimeMode();
-            timeMode.time = i + "时";
-            timeMode.isSelected = false;
+            timeMode.setTime(i + "时");
+            timeMode.setSelected(false);
             TimeMode timeMode1 = new TimeMode();
-            timeMode1.time = "";
-            timeMode1.isSelected = false;
+            timeMode1.setTime("");
+            timeMode1.setSelected(false);
 
             timeList.add(timeMode);
             timeList.add(timeMode1);
         }
         timeChooseView.setTimeChooseMoveIntreface( this );
         timeChooseView.setTime(timeList);
-        timeChooseView.setTextSpacing(textSpacing);
+        timeChooseView.setItemWidthDip(textSpacing);
         timeChooseView.setPosition(2);
         List<Integer> list = new ArrayList<>();
 

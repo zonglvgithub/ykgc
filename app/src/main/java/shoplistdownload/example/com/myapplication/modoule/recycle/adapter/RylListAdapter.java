@@ -28,7 +28,7 @@ public class RylListAdapter extends BaseAdapter{
 
     List<TimeMode> timeList = new ArrayList<>();
     List<Integer> list = new ArrayList<>();
-    int textSpacing = 60;
+    int textSpacing = 60;//default item width dip
     private ViewHolder viewHolder;
     private Activity activity;
 
@@ -104,16 +104,15 @@ public class RylListAdapter extends BaseAdapter{
             }
         });
 
-//        if( position >-1) return contentView;
 
         if( timeList == null || timeList.size()<1){
             for (int j = 2; j < 23; j++) {
                 TimeMode timeMode = new TimeMode();
-                timeMode.time = j + "时";
-                timeMode.isSelected = false;
+                timeMode.setTime(j + "时");
+                timeMode.setSelected(false);
                 TimeMode timeMode1 = new TimeMode();
-                timeMode1.time = "";
-                timeMode1.isSelected = false;
+                timeMode1.setTime("");
+                timeMode1.setSelected(false);
 
                 timeList.add(timeMode);
                 timeList.add(timeMode1);
@@ -146,7 +145,7 @@ public class RylListAdapter extends BaseAdapter{
         viewHolder.timeChooseView.setTime(timeList);
         viewHolder.timeChooseView.setViewHolder(viewHolder);
         viewHolder.scrollView.setViewHolderl(viewHolder);
-        viewHolder.timeChooseView.setTextSpacing(textSpacing);
+        viewHolder.timeChooseView.setItemWidthDip(textSpacing);
         viewHolder.timeChooseView.setPosition(3);
 
 
