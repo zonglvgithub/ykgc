@@ -30,7 +30,6 @@ public class TimeChooseView extends View {
     private Context context;
     private int statusBarHeight;//状态栏高度
     private OnTouchListener onTouchListener;
-    private SelectedTime selectedTime;
     private int position;//起始位置
     private boolean isPosition = false;//执行一次 首次加载执行
     private List<Integer> positionList;//不可选择区域位置集合
@@ -84,7 +83,7 @@ public class TimeChooseView extends View {
     private int itemWidth;//每一个时间块宽度
 
     private ValueAnimator anim;//移动动画
-    private TimeChooseMoveIntreface timeChooseMoveIntreface;
+    private TimeChooseIntreface timeChooseIntreface;
 
     private Object ViewHolder;
 
@@ -123,8 +122,8 @@ public class TimeChooseView extends View {
         this.timeList = timeList;
     }
 
-    public void setTimeChooseMoveIntreface(TimeChooseMoveIntreface timeChooseMoveIntreface) {
-        this.timeChooseMoveIntreface = timeChooseMoveIntreface;
+    public void setTimeChooseMoveIntreface(TimeChooseIntreface timeChooseIntreface) {
+        this.timeChooseIntreface = timeChooseIntreface;
     }
 
 
@@ -176,12 +175,12 @@ public class TimeChooseView extends View {
          */
 
         if (show) {
-            if (timeChooseMoveIntreface != null) {
-                timeChooseMoveIntreface.showSelectedMettingRoomDetail(show);
+            if (timeChooseIntreface != null) {
+                timeChooseIntreface.showSelectedMettingRoomDetail(show);
             }
         } else {
-            if (timeChooseMoveIntreface != null) {
-                timeChooseMoveIntreface.showSelectedMettingRoomDetail(show);
+            if (timeChooseIntreface != null) {
+                timeChooseIntreface.showSelectedMettingRoomDetail(show);
             }
         }
 
@@ -196,10 +195,6 @@ public class TimeChooseView extends View {
     public void setPositionList(List<Integer> positionList) {
         this.positionList = positionList;
         isPositionList = true;
-    }
-
-    public void setSelectedTime(SelectedTime selectedTime) {
-        this.selectedTime = selectedTime;
     }
 
     @Override
@@ -496,7 +491,10 @@ public class TimeChooseView extends View {
                     }
                     endTimeStr = endTime.get(0) + ":30";
                 }
-                selectedTime.getSelectedTime(startTimeStr, endTimeStr);
+                if( timeChooseIntreface != null){
+                    timeChooseIntreface.getSelectedTime(startTimeStr, endTimeStr);
+                }
+
                 break;
         }
 
@@ -575,9 +573,6 @@ public class TimeChooseView extends View {
         void onTouch(MotionEvent event, boolean isChoose);
     }
 
-    public interface SelectedTime {
-        void getSelectedTime(String startTimeStr, String endTimeStr);
-    }
 
     class NotChoosearea {
         public float not_choosearea_y;
@@ -781,8 +776,8 @@ public class TimeChooseView extends View {
 
         if (currentMaxPosition == screenLeftPosition || currentMaxPosition == (screenLeftPosition + 1)) {//进行北京页面滚动
             Log.d(TAG, "移动到左边某个位置");
-            if (timeChooseMoveIntreface != null) {
-                timeChooseMoveIntreface.timeChooseMove(getViewHolder(), false, itemWidth);
+            if (timeChooseIntreface != null) {
+                timeChooseIntreface.timeChooseMove(getViewHolder(), false, itemWidth);
             }
         }
 
@@ -798,8 +793,8 @@ public class TimeChooseView extends View {
 
         if (currentMaxPosition == screenRightPosition || currentMaxPosition == (screenRightPosition - 1)) {
             Log.d(TAG, "移动到右边某个位置");
-            if (timeChooseMoveIntreface != null) {
-                timeChooseMoveIntreface.timeChooseMove(getViewHolder(), true, itemWidth);
+            if (timeChooseIntreface != null) {
+                timeChooseIntreface.timeChooseMove(getViewHolder(), true, itemWidth);
             }
         }
 
@@ -827,7 +822,7 @@ public class TimeChooseView extends View {
     /**
      * view移动接口
      */
-    public interface TimeChooseMoveIntreface {
+    public interface TimeChooseIntreface {
 
         /**
          * 移动回调
@@ -843,6 +838,14 @@ public class TimeChooseView extends View {
          * @param show t:显示详情布局 f:隐藏详情布局
          */
         void showSelectedMettingRoomDetail(boolean show);
+
+        /**
+         * 返回当前选中的其实时间与结束时间
+         * @param startTimeStr
+         * @param endTimeStr
+         */
+        void getSelectedTime(String startTimeStr, String endTimeStr);
+
     }
 
     /**
@@ -851,12 +854,12 @@ public class TimeChooseView extends View {
     private void moveScrollViewOnTouch() {
         float screenRight = getScreenRight_x();
         float screenleft = getScreenLeft_x();
-        if (timeChooseMoveIntreface != null && (rectangular_to_x > screenRight)) {
-            timeChooseMoveIntreface.timeChooseMove(getViewHolder(), true, itemWidth);
+        if (timeChooseIntreface != null && (rectangular_to_x > screenRight)) {
+            timeChooseIntreface.timeChooseMove(getViewHolder(), true, itemWidth);
             move2NextPosition();
         }
-        if (timeChooseMoveIntreface != null && (rectangular_to_x < screenleft)) {
-            timeChooseMoveIntreface.timeChooseMove(getViewHolder(), true, -itemWidth);
+        if (timeChooseIntreface != null && (rectangular_to_x < screenleft)) {
+            timeChooseIntreface.timeChooseMove(getViewHolder(), true, -itemWidth);
             removePick();
         }
     }

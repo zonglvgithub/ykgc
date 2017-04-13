@@ -121,7 +121,7 @@ public class RylListAdapter extends BaseAdapter{
             Log.d(TAG, "初始化时间资源");
         }
 
-        viewHolder.timeChooseView.setTimeChooseMoveIntreface(new TimeChooseView.TimeChooseMoveIntreface() {
+        viewHolder.timeChooseView.setTimeChooseMoveIntreface(new TimeChooseView.TimeChooseIntreface() {
             @Override
             public void timeChooseMove( Object viewHolder,boolean direction, float distance) {
                 ViewHolder viewHolder1 = (ViewHolder) viewHolder;
@@ -135,6 +135,11 @@ public class RylListAdapter extends BaseAdapter{
             @Override
             public void showSelectedMettingRoomDetail(boolean show) {
 
+            }
+
+            @Override
+            public void getSelectedTime(String startTimeStr, String endTimeStr) {
+                Log.e("TimeChooseView", startTimeStr + "    ===   " + endTimeStr);
             }
         });
         //TODO：数据源支持初始已选框position 保证getView item 显示数据不会错乱
@@ -155,12 +160,6 @@ public class RylListAdapter extends BaseAdapter{
 
 
         viewHolder.timeChooseView.setPositionList(list);
-        viewHolder.timeChooseView.setSelectedTime(new TimeChooseView.SelectedTime() {
-            @Override
-            public void getSelectedTime(String startTimeStr, String endTimeStr) {
-                Log.e("TimeChooseView", startTimeStr + "    ===   " + endTimeStr);
-            }
-        });
 
         viewHolder.scrollView.setScrollViewListener(new My_ScrollView.ScrollViewListener() {
             @Override

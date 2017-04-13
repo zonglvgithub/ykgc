@@ -21,7 +21,7 @@ import shoplistdownload.example.com.myapplication.modoule.recycle.activity.Recyc
 import shoplistdownload.example.com.myapplication.modoule.recycle.adapter.RylListAdapter;
 
 
-public class MainActivity extends Activity implements View.OnClickListener,TimeChooseView.TimeChooseMoveIntreface {
+public class MainActivity extends Activity implements View.OnClickListener,TimeChooseView.TimeChooseIntreface {
     TimeChooseView timeChooseView;
     My_ScrollView scrollView;
     List<TimeMode> timeList = new ArrayList<>();
@@ -73,12 +73,6 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
 
 
         timeChooseView.setPositionList(list);
-        timeChooseView.setSelectedTime(new TimeChooseView.SelectedTime() {
-            @Override
-            public void getSelectedTime(String startTimeStr, String endTimeStr) {
-                Log.e("TimeChooseView", startTimeStr + "    ===   " + endTimeStr);
-            }
-        });
 
         scrollView.setScrollViewListener(new My_ScrollView.ScrollViewListener() {
             @Override
@@ -145,5 +139,10 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
             toast = Toast.makeText( MainActivity.this, "准备隐藏已选定会议室信息",Toast.LENGTH_SHORT);
             Log.d("TimeChooseView", "======================准备隐藏已选定会议室信息======================");
         }
+    }
+
+    @Override
+    public void getSelectedTime(String startTimeStr, String endTimeStr) {
+        Log.e("TimeChooseView", startTimeStr + "    ===   " + endTimeStr);
     }
 }
