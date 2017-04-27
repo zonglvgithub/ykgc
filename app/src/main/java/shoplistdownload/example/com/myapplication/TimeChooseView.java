@@ -254,7 +254,7 @@ public class TimeChooseView extends View {
 
         }
         if (isMaximum_x) {
-            maxiChoose_x = chooseTimeMarginLeft_px + itemWidth_px * timeList.size();
+            maxiChoose_x = chooseTimeMarginLeft_px + itemWidth_px * (timeList.size()-1);
             isMaximum_x = false;
         }
 
@@ -699,7 +699,9 @@ public class TimeChooseView extends View {
     public boolean addPick() {
 
         if (anim != null && anim.isRunning()) return false;
-        scroll2RightOnePosition();
+        boolean canMove = scroll2RightOnePosition();
+
+        if(!canMove) return false;
 
 
         if (!isShowCheckedRect()) {
@@ -815,18 +817,20 @@ public class TimeChooseView extends View {
     }
 
 
-    private void scroll2RightOnePosition() {
+    private boolean scroll2RightOnePosition() {
 
         float screenRight = getScreenRight_x();
-        int screenRightPosition = (int) screenRight / itemWidth_px;
         int currentMaxPosition = (int) rectangular_to_x / itemWidth_px;
 
-        if (currentMaxPosition == screenRightPosition || currentMaxPosition == (screenRightPosition - 1)) {
+        if ( currentMaxPosition < (timeList.size() -1)) {
             Log.d(TAG, "移动到右边某个位置");
             if (timeChooseIntreface != null) {
                 timeChooseIntreface.timeChooseMove(getViewHolder(), true, itemWidth_px);
+                return true;
             }
         }
+
+        return false;
 
     }
 
