@@ -177,4 +177,9 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
 //        anim.start();
         scrollView.scrollMoveTo(0, scrollTo);
     }
+
+    @Override
+    public void chooseTeamId(String teamId) {
+        Toast.makeText(this, "团队ID："+teamId, Toast.LENGTH_SHORT).show();
+    }
 }

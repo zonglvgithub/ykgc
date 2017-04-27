@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -421,6 +422,13 @@ public class TimeChooseView extends View {
                 float currentX = event.getX();
                 float currentY = event.getY();
 
+                String teamId = chhoosedTeamId( downRawX, event.getX());
+                if(!TextUtils.isEmpty(teamId)){
+                    if( timeChooseIntreface != null){
+                        timeChooseIntreface.chooseTeamId(teamId);
+                    }
+                }
+
                 if (Math.abs(currentX - downRawX) < 2 && Math.abs(currentY - downRawY) < 2) {
 
                     boolean clickPositionSlected = clickPositionSelected((int) event.getRawX(), event.getRawY());
@@ -819,7 +827,6 @@ public class TimeChooseView extends View {
 
     private boolean scroll2RightOnePosition() {
 
-        float screenRight = getScreenRight_x();
         int currentMaxPosition = (int) rectangular_to_x / itemWidth_px;
 
         if ( currentMaxPosition < (timeList.size() -1)) {
@@ -888,6 +895,36 @@ public class TimeChooseView extends View {
 
         void scrollViewScroolTo(float scrollTo);
 
+        /**
+         * 返回预定会议室团队ID
+         * @param teamId
+         */
+        void chooseTeamId(String teamId);
+
+    }
+
+    /**
+     * 返回已选时间的团队ID
+     * @return
+     */
+    private String chhoosedTeamId( float downx, float upx ){
+
+
+        if(Math.abs(upx-downx)<10){
+
+            int position = (int)(upx)/itemWidth_px;
+            for(TeamInfo t:positionList){
+                if(t!= null){
+                    if(position<=t.getEndPosition() && position>=t.getStartPosition() ){
+                        if(!TextUtils.isEmpty(t.getId())){
+                            return t.getId();
+                        }
+                    }
+                }
+            }
+        }
+
+        return "";
     }
 
     /**

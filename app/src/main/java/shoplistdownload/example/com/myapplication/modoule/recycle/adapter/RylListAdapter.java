@@ -155,6 +155,11 @@ public class RylListAdapter extends BaseAdapter{
                 currentViewHolder.scrollView.scrollMoveTo(lastx, scrollTo );
 
             }
+
+            @Override
+            public void chooseTeamId(String teamId) {
+                Toast.makeText( activity, "团队ID："+teamId, Toast.LENGTH_SHORT).show();
+            }
         });
 
         //TODO：数据源支持初始已选框position 保证getView item 显示数据不会错乱
