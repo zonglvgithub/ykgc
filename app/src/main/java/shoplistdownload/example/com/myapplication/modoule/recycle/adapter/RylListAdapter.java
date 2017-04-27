@@ -16,7 +16,7 @@ import shoplistdownload.example.com.myapplication.My_ScrollView;
 import shoplistdownload.example.com.myapplication.R;
 import shoplistdownload.example.com.myapplication.ScreenUtil;
 import shoplistdownload.example.com.myapplication.TimeChooseView;
-import shoplistdownload.example.com.myapplication.TimeMode;
+import shoplistdownload.example.com.myapplication.modoule.bean.TeamInfo;
 
 /**
  * Created by zhanghuawei on 2017/3/28.
@@ -26,8 +26,8 @@ public class RylListAdapter extends BaseAdapter{
 
     public static final String TAG = "RylListAdapter";
 
-    List<TimeMode> timeList = new ArrayList<>();
-    List<Integer> list = new ArrayList<>();
+    List<String> timeList = new ArrayList<>();
+    List<TeamInfo> list = new ArrayList<>();
     int textSpacing = 60;//default item width dip
     private ViewHolder viewHolder;
     private Activity activity;
@@ -51,7 +51,7 @@ public class RylListAdapter extends BaseAdapter{
         return 0;
     }
 
-
+    float lastx = 0;
     @Override
     public View getView(final int position, View contentView , ViewGroup viewGroup) {
 
@@ -107,15 +107,9 @@ public class RylListAdapter extends BaseAdapter{
 
         if( timeList == null || timeList.size()<1){
             for (int j = 2; j < 23; j++) {
-                TimeMode timeMode = new TimeMode();
-                timeMode.setTime(j + "时");
-                timeMode.setSelected(false);
-                TimeMode timeMode1 = new TimeMode();
-                timeMode1.setTime("");
-                timeMode1.setSelected(false);
 
-                timeList.add(timeMode);
-                timeList.add(timeMode1);
+                timeList.add(String.valueOf(j) );
+                timeList.add(j+"：30");
             }
             Log.d(TAG, "初始化时间资源");
         }
@@ -137,23 +131,62 @@ public class RylListAdapter extends BaseAdapter{
             }
 
             @Override
-            public void getSelectedTime(String startTimeStr, String endTimeStr) {
+            public void outPutSelectedTime(String startTimeStr, String endTimeStr) {
                 Log.e("TimeChooseView", startTimeStr + "    ===   " + endTimeStr);
             }
+
+            @Override
+            public void scrollViewScroolTo(float scrollTo) {
+
+
+//                ValueAnimator anim = ValueAnimator.ofFloat(0, scrollTo);
+//                lastx = 0;
+//                anim.setDuration(500);
+//                anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                    @Override
+//                    public void onAnimationUpdate(ValueAnimator animation) {
+//                        float currentValue = (float) animation.getAnimatedValue();
+//
+//                        currentViewHolder.scrollView.scrollMoveTo(lastx, currentValue );
+//                        lastx = currentValue;
+//                    }
+//                });
+//                anim.start();
+                currentViewHolder.scrollView.scrollMoveTo(lastx, scrollTo );
+
+            }
         });
+
         //TODO：数据源支持初始已选框position 保证getView item 显示数据不会错乱
         viewHolder.timeChooseView.setTime(timeList);
         viewHolder.timeChooseView.setViewHolder(viewHolder);
         viewHolder.scrollView.setViewHolderl(viewHolder);
         viewHolder.timeChooseView.setItemWidthDip(textSpacing);
-        viewHolder.timeChooseView.setPosition(3);
 
 
         if( list == null || list.size()<1){
-            list.add(5);
-            list.add(7);
-            list.add(8);
-            list.add(10);
+
+            for(int i=0;i<30;i++){
+
+
+                if(i%3==0 ){
+                    TeamInfo teamInfo = null;
+                    if(i<4){
+                        teamInfo = new TeamInfo("","",0,4);
+                        i=5;
+                        list.add(teamInfo);
+                        continue;
+                    }
+                    if(i/3==2){
+                        teamInfo = new TeamInfo("测试数据",String.valueOf(i),i,i+2);
+                    }else {
+                        teamInfo = new TeamInfo("测试数据",String.valueOf(i),i,i+1);
+                    }
+                    list.add(teamInfo);
+                }
+
+            }
+
         }
 
 
@@ -168,7 +201,7 @@ public class RylListAdapter extends BaseAdapter{
             }
         });
 
-        viewHolder.timeChooseView.setWidthHeight(ScreenUtil.dip2px(activity, timeList.size() * textSpacing + 20), ScreenUtil.dip2px(activity, 80), timeList.size());// 重新绘制宽高，不然自定义控件放在ScrollView里面没有高度不显示
+        viewHolder.timeChooseView.setWidthHeight(ScreenUtil.dip2px(activity, 80));// 重新绘制宽高，不然自定义控件放在ScrollView里面没有高度不显示
 
 
         return contentView;

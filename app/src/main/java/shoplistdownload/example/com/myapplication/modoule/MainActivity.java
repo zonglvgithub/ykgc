@@ -16,15 +16,14 @@ import shoplistdownload.example.com.myapplication.My_ScrollView;
 import shoplistdownload.example.com.myapplication.R;
 import shoplistdownload.example.com.myapplication.ScreenUtil;
 import shoplistdownload.example.com.myapplication.TimeChooseView;
-import shoplistdownload.example.com.myapplication.TimeMode;
+import shoplistdownload.example.com.myapplication.modoule.bean.TeamInfo;
 import shoplistdownload.example.com.myapplication.modoule.recycle.activity.RecycleListActivity;
-import shoplistdownload.example.com.myapplication.modoule.recycle.adapter.RylListAdapter;
 
 
 public class MainActivity extends Activity implements View.OnClickListener,TimeChooseView.TimeChooseIntreface {
     TimeChooseView timeChooseView;
     My_ScrollView scrollView;
-    List<TimeMode> timeList = new ArrayList<>();
+    List<String> timeList = new ArrayList<>();
     int textSpacing = 60;
 
 
@@ -50,26 +49,41 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
         tv_listActivity.setOnClickListener( this );
 
         for (int i = 2; i < 23; i++) {
-            TimeMode timeMode = new TimeMode();
-            timeMode.setTime(i + "时");
-            timeMode.setSelected(false);
-            TimeMode timeMode1 = new TimeMode();
-            timeMode1.setTime("");
-            timeMode1.setSelected(false);
 
-            timeList.add(timeMode);
-            timeList.add(timeMode1);
+            timeList.add(String.valueOf(i) );
+            if(i<22){
+                timeList.add(i+":30");
+            }
+
+
         }
         timeChooseView.setTimeChooseMoveIntreface( this );
         timeChooseView.setTime(timeList);
         timeChooseView.setItemWidthDip(textSpacing);
-        timeChooseView.setPosition(2);
-        List<Integer> list = new ArrayList<>();
+        List<TeamInfo> list = new ArrayList<>();
 
-        list.add(5);
-        list.add(7);
-        list.add(8);
-        list.add(10);
+        for(int i=0;i<40;i++){
+
+            if(i>30 ) break;
+            if(i%3==0 ){
+                TeamInfo teamInfo = null;
+
+                if(i<4){
+                    teamInfo = new TeamInfo("","",0,4);
+                    i=5;
+                    list.add(teamInfo);
+                    continue;
+                }
+                if(i/3==2){
+                     teamInfo = new TeamInfo("测试数据",String.valueOf(i),i,i+2);
+                }else {
+                     teamInfo = new TeamInfo("测试数据",String.valueOf(i),i,i+1);
+                }
+
+                list.add(teamInfo);
+            }
+
+        }
 
 
         timeChooseView.setPositionList(list);
@@ -81,7 +95,7 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
             }
         });
 
-        timeChooseView.setWidthHeight(ScreenUtil.dip2px(this, timeList.size() * textSpacing + 20), ScreenUtil.dip2px(this, 80),timeList.size());// 重新绘制宽高，不然自定义控件放在ScrollView里面没有高度不显示
+        timeChooseView.setWidthHeight( ScreenUtil.dip2px(this, 80));// 重新绘制宽高，不然自定义控件放在ScrollView里面没有高度不显示
 
     }
 
@@ -142,7 +156,25 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
     }
 
     @Override
-    public void getSelectedTime(String startTimeStr, String endTimeStr) {
+    public void outPutSelectedTime(String startTimeStr, String endTimeStr) {
         Log.e("TimeChooseView", startTimeStr + "    ===   " + endTimeStr);
+    }
+
+    @Override
+    public void scrollViewScroolTo(float scrollTo) {
+//        ValueAnimator anim = ValueAnimator.ofFloat(0, scrollTo);
+//        lastx = 0;
+//        anim.setDuration(1000);
+//        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                float currentValue = (float) animation.getAnimatedValue();
+//
+//                scrollView.scrollMoveTo(0, currentValue );
+//                lastx = currentValue;
+//            }
+//        });
+//        anim.start();
+        scrollView.scrollMoveTo(0, scrollTo);
     }
 }
