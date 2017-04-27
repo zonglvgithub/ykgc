@@ -29,7 +29,7 @@ public class TimeChooseView extends View {
 
     public static final String TAG = "TimeChooseView";
 
-    private int[] teamBgColor = new int[]{R.color.green, R.color.blue, R.color.yellow};
+    private int[] teamBgColor = new int[]{R.color.choose_time_green, R.color.choose_time_blue, R.color.choose_time_yellow};
     private int teamBgIndex = 0;
     private Context context;
     private OnTouchListener onTouchListener;
@@ -222,11 +222,11 @@ public class TimeChooseView extends View {
         paint.setColor(context.getResources().getColor(R.color.transparencyg_reen_20));
 
         Paint notChoosePaint = new Paint();
-        notChoosePaint.setColor(context.getResources().getColor(R.color.gray80));
+        notChoosePaint.setColor(context.getResources().getColor(R.color.choose_time_gray80));
 
 
         Paint paintLine = new Paint();
-        paintLine.setColor(context.getResources().getColor(R.color.gray));
+        paintLine.setColor(context.getResources().getColor(R.color.choose_time_gray));
         paintLine.setStrokeWidth(lineWidth_px);
         //时间画笔
         Paint paintText = new Paint();
@@ -273,7 +273,7 @@ public class TimeChooseView extends View {
                 notChoosearea.name = teamInfo.getName();
                 notChoosearea.teamId = teamInfo.getId();
                 if (TextUtils.isEmpty(teamInfo.getId())) {
-                    notChoosearea.bgColor = R.color.gray;
+                    notChoosearea.bgColor = R.color.choose_time_gray;
                     scrollViewScrollToPx = (chooseTimeMarginLeft_px + (endPosition * itemWidth_px)) + itemWidth_px;
                 } else {
                     if (teamBgIndex >= teamBgColor.length) teamBgIndex = 0;
@@ -317,7 +317,7 @@ public class TimeChooseView extends View {
                 effectiveReservation = false;
                 break;
             } else {
-                paintLine.setColor(context.getResources().getColor(R.color.green));
+                paintLine.setColor(context.getResources().getColor(R.color.choose_time_green));
                 moveBtn = BitmapFactory.decodeResource(getResources(), R.drawable.time_select_view_button);
                 effectiveReservation = true;
             }

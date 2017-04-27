@@ -6,11 +6,11 @@
     <color name="red">#ff0000</color>
     <color name="red1">#6cff0000</color>
     <color name="black">#000000</color>
-    <color name="gray80">#AAD8D8D8</color>
-    <color name="gray">#D8D8D8</color>
-    <color name="yellow">#FFDF8C</color>
-    <color name="blue">#B3C8F8</color>
-    <color name="green">#C4E8A0</color>
+    <color name="choose_time_gray80">#AAD8D8D8</color>
+    <color name="choose_time_gray">#D8D8D8</color>
+    <color name="choose_time_yellow">#FFDF8C</color>
+    <color name="choose_time_blue">#B3C8F8</color>
+    <color name="choose_time_green">#C4E8A0</color>
     <color name="transparencyg_reen_20">#400CB700</color>
     <color name="white">#ffffff</color>
 
