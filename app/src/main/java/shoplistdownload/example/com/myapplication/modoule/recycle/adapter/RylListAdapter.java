@@ -106,12 +106,24 @@ public class RylListAdapter extends BaseAdapter{
 
 
         if( timeList == null || timeList.size()<1){
-            for (int j = 2; j < 23; j++) {
 
-                timeList.add(String.valueOf(j) );
-                timeList.add(j+"：30");
+            int max = 23;
+            for (int i = 2; i < 23; i++) {
+
+
+                if(i<10){
+                    timeList.add("0"+String.valueOf(i) +":00");
+                    if(i<max-1){
+                        timeList.add("0"+i+":30");
+                    }
+                }else{
+                    timeList.add(String.valueOf(i)+":00" );
+                    if(i<max-1){
+                        timeList.add(i+":30");
+                    }
+                }
+
             }
-            Log.d(TAG, "初始化时间资源");
         }
 
         viewHolder.timeChooseView.setTimeChooseMoveIntreface(new TimeChooseView.TimeChooseIntreface() {
@@ -174,8 +186,10 @@ public class RylListAdapter extends BaseAdapter{
             for(int i=0;i<30;i++){
 
 
+                if(i>30 ) break;
                 if(i%3==0 ){
                     TeamInfo teamInfo = null;
+
                     if(i<4){
                         teamInfo = new TeamInfo("","",0,4);
                         i=5;
@@ -187,6 +201,7 @@ public class RylListAdapter extends BaseAdapter{
                     }else {
                         teamInfo = new TeamInfo("测试数据",String.valueOf(i),i,i+1);
                     }
+
                     list.add(teamInfo);
                 }
 

@@ -48,13 +48,20 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
         tv_remove_btn.setOnClickListener(this);
         tv_listActivity.setOnClickListener( this );
 
-        for (int i = 2; i < 23; i++) {
+        int max =23;
+        for (int i = 2; i < max; i++) {
 
-            timeList.add(String.valueOf(i) );
-            if(i<22){
-                timeList.add(i+":30");
+            if(i<10){
+                timeList.add("0"+String.valueOf(i) +":00");
+                if(i<max-1){
+                    timeList.add("0"+i+":30");
+                }
+            }else{
+                timeList.add(String.valueOf(i)+":00" );
+                if(i<max-1){
+                    timeList.add(i+":30");
+                }
             }
-
 
         }
         timeChooseView.setTimeChooseMoveIntreface( this );

@@ -238,6 +238,12 @@ public class TimeChooseView extends View {
 
         for (int i = 0; i < timeList.size(); i++) {//画item线
             String time = timeList.get(i);
+            if(!TextUtils.isEmpty(time) && time.contains(":") && time.length()>2){
+                time = time.substring(0,2);
+                if(time.startsWith("0")){
+                    time = time.substring(1,2);
+                }
+            }
 
             float line_x = chooseTimeMarginLeft_px + (i * itemWidth_px);
 
