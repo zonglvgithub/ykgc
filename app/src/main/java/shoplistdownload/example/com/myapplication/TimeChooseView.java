@@ -918,7 +918,7 @@ public class TimeChooseView extends View {
 
         if(Math.abs(upx-downx)<10){
 
-            int position = (int)(upx)/itemWidth_px;
+            int position = (int)(upx-chooseTimeMarginLeft_px)/itemWidth_px;
             for(TeamInfo t:positionList){
                 if(t!= null){
                     if(position<=t.getEndPosition() && position>=t.getStartPosition() ){
