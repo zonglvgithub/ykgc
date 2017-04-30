@@ -34,7 +34,7 @@ public class TimeChooseView extends View {
     private int teamBgIndex = 0;
     private Context context;
     private OnTouchListener onTouchListener;
-    private boolean effectiveReservation = false;//t:有效预定 f:无效预定
+    private boolean effectiveReservation = true;//t:有效预定 f:无效预定
     private String choosedStartTime;//已选中开始时间
     private String choosedEndTime;//已选中结束时间
 
@@ -91,7 +91,7 @@ public class TimeChooseView extends View {
 
     private float scrollViewScrollToPx;//scrollView 自动一定距离
     private boolean ScrollViewAutomationScroll;//自动滚动隐藏过期区域 t:需要滚动 f:不需要滚动
-
+    private int choosePositionCount;//已选单位时间个数
 
 
     private Object ViewHolder;
@@ -318,7 +318,7 @@ public class TimeChooseView extends View {
                     || rectangular_x == nc.not_choosearea_y && rectangular_to_x == nc.not_choosearea_to_y
                     || rectangular_x < nc.not_choosearea_y && rectangular_to_x >= nc.not_choosearea_to_y
                     || rectangular_x <= nc.not_choosearea_y && rectangular_to_x > nc.not_choosearea_to_y) {
-                paint.setColor(context.getResources().getColor(R.color.red1));
+                paint.setColor(context.getResources().getColor(R.color.chooser_time_red));
                 paintLine.setColor(context.getResources().getColor(R.color.red));
                 moveBtn = BitmapFactory.decodeResource(getResources(), R.drawable.time_select_view_button_);
                 effectiveReservation = false;
@@ -522,8 +522,10 @@ public class TimeChooseView extends View {
         int end = (int) ((rectangular_to_x - chooseTimeMarginLeft_px) / itemWidth_px);
         choosedEndTime = timeList.get(end);
 
+        choosePositionCount =  end-start;
+
         if (timeChooseIntreface != null) {
-            timeChooseIntreface.outPutSelectedTime(choosedStartTime, choosedEndTime);
+            timeChooseIntreface.outPutSelectedTime(choosedStartTime, choosedEndTime, choosePositionCount);
         }
     }
 
@@ -889,10 +891,11 @@ public class TimeChooseView extends View {
         /**
          * 返回当前选中的其实时间与结束时间
          *
-         * @param startTimeStr
-         * @param endTimeStr
+         * @param startTimeStr 选择开始时间
+         * @param endTimeStr 选择结束时间
+         * @param choosePosiotionCount 包含选择单位时间个数
          */
-         void outPutSelectedTime(String startTimeStr, String endTimeStr);
+         void outPutSelectedTime(String startTimeStr, String endTimeStr, int choosePosiotionCount);
 
 
         /**
@@ -971,6 +974,14 @@ public class TimeChooseView extends View {
      */
     public boolean getChoosedState(){
         return effectiveReservation;
+    }
+
+    /**
+     * 获得当前选中时间position 个数
+     * @return
+     */
+    public int getChoosePositonCount(){
+        return choosePositionCount;
     }
 
 }

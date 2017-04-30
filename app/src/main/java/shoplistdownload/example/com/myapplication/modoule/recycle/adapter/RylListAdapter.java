@@ -27,7 +27,7 @@ public class RylListAdapter extends BaseAdapter{
     public static final String TAG = "RylListAdapter";
 
     List<String> timeList = new ArrayList<>();
-    List<TeamInfo> list = new ArrayList<>();
+    List<TeamInfo> Teamlist = new ArrayList<>();
     int textSpacing = 60;//default item width dip
     private ViewHolder viewHolder;
     private Activity activity;
@@ -181,7 +181,7 @@ public class RylListAdapter extends BaseAdapter{
         viewHolder.timeChooseView.setItemWidthDip(textSpacing);
 
 
-        if( list == null || list.size()<1){
+        if( Teamlist == null || Teamlist.size()<1){
 
             for(int i=0;i<30;i++){
 
@@ -193,7 +193,7 @@ public class RylListAdapter extends BaseAdapter{
                     if(i<4){
                         teamInfo = new TeamInfo("","",0,4);
                         i=5;
-                        list.add(teamInfo);
+                        Teamlist.add(teamInfo);
                         continue;
                     }
                     if(i/3==2){
@@ -202,7 +202,7 @@ public class RylListAdapter extends BaseAdapter{
                         teamInfo = new TeamInfo("测试数据",String.valueOf(i),i,i+1);
                     }
 
-                    list.add(teamInfo);
+                    Teamlist.add(teamInfo);
                 }
 
             }
@@ -211,7 +211,7 @@ public class RylListAdapter extends BaseAdapter{
 
 
 
-        viewHolder.timeChooseView.setPositionList(list);
+        viewHolder.timeChooseView.setPositionList(Teamlist);
 
         viewHolder.scrollView.setScrollViewListener(new My_ScrollView.ScrollViewListener() {
             @Override
