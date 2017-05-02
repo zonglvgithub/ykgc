@@ -94,6 +94,19 @@ public class TimeChooseView extends View {
     private int choosePositionCount;//已选单位时间个数
 
 
+    private void resetData(){
+
+        rectangular_x = 0;
+        rectangular_to_x = 0;
+        rectangular_spacing= 0;
+        rectangular_x_begin = 0;
+        rectangular_x_end = 0;
+        showCheckedRect =false;
+        if(notChooseareaList != null ){
+            notChooseareaList.clear();
+        }
+//        ScrollViewAutomationScroll  =true;
+    }
     private Object ViewHolder;
 
     public TimeChooseView(Context context) {
@@ -207,7 +220,13 @@ public class TimeChooseView extends View {
     public void setPositionList(List<TeamInfo> positionList) {
         this.positionList = positionList;
         isPositionList = true;
+        //重新注入已选择数据需要清空状态标志位或者重新再次赋值
+
+        resetData();
+        invalidate();
+
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -267,7 +286,7 @@ public class TimeChooseView extends View {
 
         if (isPositionList) {
             isPositionList = false;
-
+            notChooseareaList.clear();
             String teamid = "";
             for (int i = 0; i < positionList.size(); i++) {//遍历不可选择区域
                 TeamInfo teamInfo = positionList.get(i);
@@ -516,6 +535,7 @@ public class TimeChooseView extends View {
      * 回调当前选中时间段
      */
     private void outPutChooseTime(){
+
         int start = (int) ((rectangular_x - chooseTimeMarginLeft_px) / itemWidth_px);
         choosedStartTime = timeList.get(start);
 

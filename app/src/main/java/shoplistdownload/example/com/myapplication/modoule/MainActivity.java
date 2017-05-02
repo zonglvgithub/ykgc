@@ -30,6 +30,7 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
     private TextView tv_add_btn;
     private TextView tv_remove_btn;
     private TextView tv_listActivity;
+    private TextView tv_refresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +43,13 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
         tv_add_btn = (TextView) findViewById(R.id.tv_add_btn);
         tv_remove_btn = (TextView) findViewById(R.id.tv_remove_btn);
         tv_listActivity = (TextView) findViewById(R.id.tv_listActivity);
+        tv_refresh = (TextView) findViewById(R.id.tv_refresh);
 
 
         tv_add_btn.setOnClickListener(this);
         tv_remove_btn.setOnClickListener(this);
         tv_listActivity.setOnClickListener( this );
+        tv_refresh.setOnClickListener( this );
 
         int max =23;
         for (int i = 2; i < max; i++) {
@@ -64,36 +67,11 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
             }
 
         }
-        timeChooseView.setTimeChooseMoveIntreface( this );
         timeChooseView.setTime(timeList);
+        timeChooseView.setTimeChooseMoveIntreface( this );
+
         timeChooseView.setItemWidthDip(textSpacing);
-        List<TeamInfo> list = new ArrayList<>();
-
-        for(int i=0;i<40;i++){
-
-            if(i>30 ) break;
-            if(i%3==0 ){
-                TeamInfo teamInfo = null;
-
-                if(i<4){
-                    teamInfo = new TeamInfo("","",0,4);
-                    i=5;
-                    list.add(teamInfo);
-                    continue;
-                }
-                if(i/3==2){
-                     teamInfo = new TeamInfo("测试数据",String.valueOf(i),i,i+2);
-                }else {
-                     teamInfo = new TeamInfo("测试数据",String.valueOf(i),i,i+1);
-                }
-
-                list.add(teamInfo);
-            }
-
-        }
-
-
-        timeChooseView.setPositionList(list);
+        productData();
 
         scrollView.setScrollViewListener(new My_ScrollView.ScrollViewListener() {
             @Override
@@ -138,7 +116,45 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
                 Intent intent = new Intent( this, RecycleListActivity.class);
                 startActivity( intent);
                 break;
+            case R.id.tv_refresh:
+
+                productData();
+                break;
         }
+    }
+
+    private void productData(){
+
+        List<TeamInfo> list = new ArrayList<>();
+
+        int max =  (int)(Math.random()*40);
+
+        for(int i=0;i<max;i++){
+
+            if(i>30 ) break;
+            if(i%3==0 ){
+                TeamInfo teamInfo = null;
+
+                if(i<4){
+                    int position  =  (int)(Math.random()*10);
+                    teamInfo = new TeamInfo( "", "", 0, position);
+                    i=5;
+                    list.add(teamInfo);
+                    continue;
+                }
+                if(i/3==2){
+                    teamInfo = new TeamInfo("测试数据",String.valueOf(i),i,i+2);
+                }else {
+                    teamInfo = new TeamInfo("测试数据",String.valueOf(i),i,i+1);
+                }
+
+                list.add(teamInfo);
+            }
+
+        }
+
+
+        timeChooseView.setPositionList(list);
     }
 
     @Override
@@ -163,7 +179,7 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
     }
 
     @Override
-    public void outPutSelectedTime(String startTimeStr, String endTimeStr) {
+    public void outPutSelectedTime(String startTimeStr, String endTimeStr,  int choosePosiotionCount) {
         Log.e("TimeChooseView", startTimeStr + "    ===   " + endTimeStr);
     }
 

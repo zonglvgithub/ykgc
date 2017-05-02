@@ -27,7 +27,8 @@ public class RylListAdapter extends BaseAdapter{
     public static final String TAG = "RylListAdapter";
 
     List<String> timeList = new ArrayList<>();
-    List<TeamInfo> Teamlist = new ArrayList<>();
+
+    List<List<TeamInfo> > lists = new ArrayList<>();
     int textSpacing = 60;//default item width dip
     private ViewHolder viewHolder;
     private Activity activity;
@@ -36,14 +37,19 @@ public class RylListAdapter extends BaseAdapter{
         this.activity = activity;
     }
 
-    @Override
-    public int getCount() {
-        return 50;
+    public RylListAdapter( Activity activity, List<List<TeamInfo>> lists) {
+        this.lists = lists;
+        this.activity = activity;
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public int getCount() {
+        return lists==null?0:lists.size();
+    }
+
+    @Override
+    public List<TeamInfo> getItem(int i) {
+       return lists.get(i);
     }
 
     @Override
@@ -143,7 +149,7 @@ public class RylListAdapter extends BaseAdapter{
             }
 
             @Override
-            public void outPutSelectedTime(String startTimeStr, String endTimeStr) {
+            public void outPutSelectedTime(String startTimeStr, String endTimeStr, int choosePosiotionCount) {
                 Log.e("TimeChooseView", startTimeStr + "    ===   " + endTimeStr);
             }
 
@@ -181,37 +187,7 @@ public class RylListAdapter extends BaseAdapter{
         viewHolder.timeChooseView.setItemWidthDip(textSpacing);
 
 
-        if( Teamlist == null || Teamlist.size()<1){
-
-            for(int i=0;i<30;i++){
-
-
-                if(i>30 ) break;
-                if(i%3==0 ){
-                    TeamInfo teamInfo = null;
-
-                    if(i<4){
-                        teamInfo = new TeamInfo("","",0,4);
-                        i=5;
-                        Teamlist.add(teamInfo);
-                        continue;
-                    }
-                    if(i/3==2){
-                        teamInfo = new TeamInfo("测试数据",String.valueOf(i),i,i+2);
-                    }else {
-                        teamInfo = new TeamInfo("测试数据",String.valueOf(i),i,i+1);
-                    }
-
-                    Teamlist.add(teamInfo);
-                }
-
-            }
-
-        }
-
-
-
-        viewHolder.timeChooseView.setPositionList(Teamlist);
+        viewHolder.timeChooseView.setPositionList( getItem(position));
 
         viewHolder.scrollView.setScrollViewListener(new My_ScrollView.ScrollViewListener() {
             @Override

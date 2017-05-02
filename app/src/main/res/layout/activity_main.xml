@@ -64,14 +64,29 @@
 
         </shoplistdownload.example.com.myapplication.My_ScrollView>
 
-        <TextView
-            android:id="@+id/tv_listActivity"
-            android:layout_width="150dip"
-            android:layout_height="60dip"
-            android:layout_alignParentLeft="true"
-            android:background="@android:color/holo_red_light"
-            android:gravity="center"
-            android:text="ListActivity"
-            android:textColor="@android:color/white" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_listActivity"
+                android:layout_width="150dip"
+                android:layout_height="60dip"
+                android:layout_alignParentLeft="true"
+                android:background="@android:color/holo_red_light"
+                android:gravity="center"
+                android:text="ListActivity"
+                android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/tv_refresh"
+                android:layout_width="150dip"
+                android:layout_height="60dip"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/holo_red_light"
+                android:gravity="center"
+                android:text="refresh"
+                android:textColor="@android:color/white" />
+        </RelativeLayout>
+
+
     </LinearLayout>
 </ScrollView>
