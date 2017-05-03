@@ -17,6 +17,7 @@ import shoplistdownload.example.com.myapplication.R;
 import shoplistdownload.example.com.myapplication.ScreenUtil;
 import shoplistdownload.example.com.myapplication.TimeChooseView;
 import shoplistdownload.example.com.myapplication.modoule.bean.TeamInfo;
+import shoplistdownload.example.com.myapplication.modoule.recycle.activity.ListActivity;
 import shoplistdownload.example.com.myapplication.modoule.recycle.activity.RecycleListActivity;
 
 
@@ -31,6 +32,7 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
     private TextView tv_remove_btn;
     private TextView tv_listActivity;
     private TextView tv_refresh;
+    private TextView tv_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +46,14 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
         tv_remove_btn = (TextView) findViewById(R.id.tv_remove_btn);
         tv_listActivity = (TextView) findViewById(R.id.tv_listActivity);
         tv_refresh = (TextView) findViewById(R.id.tv_refresh);
+        tv_list = (TextView) findViewById(R.id.tv_list);
 
 
         tv_add_btn.setOnClickListener(this);
         tv_remove_btn.setOnClickListener(this);
         tv_listActivity.setOnClickListener( this );
         tv_refresh.setOnClickListener( this );
+        tv_list.setOnClickListener( this );
 
         int max =23;
         for (int i = 2; i < max; i++) {
@@ -119,6 +123,10 @@ public class MainActivity extends Activity implements View.OnClickListener,TimeC
             case R.id.tv_refresh:
 
                 productData();
+                break;
+            case R.id.tv_list:
+                Intent intent1 = new Intent( this, ListActivity.class);
+                startActivity( intent1 );
                 break;
         }
     }

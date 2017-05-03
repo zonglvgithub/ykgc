@@ -222,6 +222,9 @@ public class TimeChooseView extends View {
         isPositionList = true;
         //重新注入已选择数据需要清空状态标志位或者重新再次赋值
 
+        Log.d(TAG, "=================================");
+        Log.d(TAG, "更新数据"+this.positionList.toString() );
+        Log.d(TAG, "=================================");
         resetData();
         invalidate();
 

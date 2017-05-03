@@ -74,7 +74,7 @@
                 android:layout_alignParentLeft="true"
                 android:background="@android:color/holo_red_light"
                 android:gravity="center"
-                android:text="ListActivity"
+                android:text="recycleView"
                 android:textColor="@android:color/white" />
             <TextView
                 android:id="@+id/tv_refresh"
@@ -85,6 +85,21 @@
                 android:gravity="center"
                 android:text="refresh"
                 android:textColor="@android:color/white" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip">
+            <TextView
+                android:id="@+id/tv_list"
+                android:layout_width="150dip"
+                android:layout_height="60dip"
+                android:layout_alignParentLeft="true"
+                android:background="@android:color/holo_red_light"
+                android:gravity="center"
+                android:text="ListActivity"
+                android:textColor="@android:color/white" />
+
         </RelativeLayout>
 
 

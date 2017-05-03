@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".modoule.recycle.activity.RecycleListActivity"></activity>
+        <activity android:name=".modoule.recycle.activity.RecycleListActivity" />
+        <activity android:name=".modoule.recycle.activity.ListActivity"></activity>
     </application>
 
 </manifest>

@@ -2,46 +2,52 @@ package shoplistdownload.example.com.myapplication.modoule.recycle.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import shoplistdownload.example.com.myapplication.R;
 import shoplistdownload.example.com.myapplication.modoule.bean.TeamInfo;
-import shoplistdownload.example.com.myapplication.modoule.recycle.adapter.RylListAdapter;
+import shoplistdownload.example.com.myapplication.modoule.recycle.adapter.ChooseTimeAdapter;
 
 
 public class RecycleListActivity extends Activity implements View.OnClickListener{
 
-    private ListView recycleList;
-    private RylListAdapter adapter;
+    private RecyclerView recycleList;
+    private ChooseTimeAdapter adapter;
     private TextView tv_refresh;
 
     private List<List<TeamInfo> > lists = new ArrayList<>();
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycle_list);
         tv_refresh = (TextView) findViewById(R.id.tv_refresh);
 
-
-
-
         tv_refresh.setOnClickListener( this );
         getData();
-        recycleList = (ListView) findViewById(R.id.ryl_metting_room);
+        recycleList = (RecyclerView) findViewById(R.id.ryl_metting_room);
+        recycleList.setLayoutManager(new LinearLayoutManager( this, LinearLayoutManager.VERTICAL, false));
         recycleList.setAdapter( adapter );
     }
+
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tv_refresh:
                 getData();
+                if( toast != null ) toast.cancel();
+                toast = Toast.makeText( this, "刷",Toast.LENGTH_SHORT);
+
                 break;
         }
     }
@@ -71,9 +77,9 @@ public class RecycleListActivity extends Activity implements View.OnClickListene
                         continue;
                     }
                     if(j/3==2){
-                        teamInfo = new TeamInfo("测试数据",String.valueOf(j), j, j+2);
+                        teamInfo = new TeamInfo("测试"+i,String.valueOf(j), j, j+2);
                     }else {
-                        teamInfo = new TeamInfo("测试数据",String.valueOf(j), j, j+1);
+                        teamInfo = new TeamInfo("测试"+i,String.valueOf(j), j, j+1);
                     }
 
                     list.add(teamInfo);
@@ -83,15 +89,18 @@ public class RecycleListActivity extends Activity implements View.OnClickListene
 
             lists.add( list );
         }
+
         refreshAdapter();
+
     }
 
     private void refreshAdapter(){
 
         if(adapter == null ){
-            adapter = new RylListAdapter( this ,lists);
-        }else{
-            adapter.notifyDataSetChanged();
+            adapter = new ChooseTimeAdapter( this ,lists);
+//        }else{
+            adapter.setLists(lists);
+//            adapter.notifyDataSetChanged();
         }
     }
 }

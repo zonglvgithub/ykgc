@@ -55,7 +55,6 @@ public class TeamInfo {
     }
 
 
-
     @Override
     public String toString() {
         return "TeamInfo{" +

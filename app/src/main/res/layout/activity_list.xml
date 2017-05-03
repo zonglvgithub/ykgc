@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context="shoplistdownload.example.com.myapplication.modoule.recycle.activity.RecycleListActivity">
+
+    <TextView
+        android:id="@+id/tv_refresh"
+        android:layout_width="100dip"
+        android:layout_height="60dip"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/red"
+        android:gravity="center"
+        android:text="refresh"
+        android:textColor="@color/white" />
+
+    <ListView
+        android:id="@+id/ryl_metting_room"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv_refresh" />
+
+</RelativeLayout>

@@ -18,7 +18,7 @@
         android:text="refresh"
         android:textColor="@color/white" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/ryl_metting_room"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
