@@ -65,7 +65,7 @@ public class RylListAdapter extends BaseAdapter{
         Log.d(TAG, "getView 调用");
         if( contentView == null ){
             viewHolder = new ViewHolder();
-            contentView = LayoutInflater.from(activity).inflate(R.layout.listitem,viewGroup,false);
+            contentView = LayoutInflater.from(activity).inflate(R.layout.listitem,null,false);
             viewHolder.tv_add_btn = (TextView) contentView.findViewById(R.id.tv_add_btn);
             viewHolder.tv_remove_btn = (TextView) contentView.findViewById(R.id.tv_remove_btn);
             viewHolder.scrollView = (My_ScrollView) contentView.findViewById(R.id.scrollView);

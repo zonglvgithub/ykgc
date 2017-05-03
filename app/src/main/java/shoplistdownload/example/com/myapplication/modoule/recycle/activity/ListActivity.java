@@ -25,6 +25,7 @@ public class ListActivity extends Activity implements View.OnClickListener{
     private TextView tv_refresh;
 
     private List<List<TeamInfo>> lists = new ArrayList<>();
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,9 @@ public class ListActivity extends Activity implements View.OnClickListener{
         switch (view.getId()){
             case R.id.tv_refresh:
                 getData();
-                Toast.makeText( this, "刷",Toast.LENGTH_SHORT).show();
+                if( toast != null ) toast.cancel();
+                toast = Toast.makeText( this, "刷",Toast.LENGTH_SHORT);
+                toast.show();
                 break;
         }
     }

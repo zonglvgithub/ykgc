@@ -1,4 +1,4 @@
-package shoplistdownload.example.com.myapplication.modoule;
+package shoplistdownload.example.com.myapplication.modoule.main.activity;
 
 import android.app.Activity;
 import android.content.Intent;

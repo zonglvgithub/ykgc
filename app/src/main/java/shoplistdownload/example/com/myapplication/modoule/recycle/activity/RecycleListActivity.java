@@ -47,7 +47,7 @@ public class RecycleListActivity extends Activity implements View.OnClickListene
                 getData();
                 if( toast != null ) toast.cancel();
                 toast = Toast.makeText( this, "刷",Toast.LENGTH_SHORT);
-
+                toast.show();
                 break;
         }
     }
